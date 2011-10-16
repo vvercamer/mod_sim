@@ -1,21 +1,24 @@
-SIMUL = main.o 
+CC = g++
+CFLAGS = -Wall -Werror -O2 -Wshadow
+EXEC_NAME = simulation
+INCLUDES = -I/usr/local/include
+LIBS = -L/usr/local/lib -lgsl -lgslcblas -lm -lpthread -D__MACOSX_CORE__  -framework CoreFoundation 
+OBJ_FILES = main.o random.o
+INSTALL_DIR = /usr/bin
 
-C++ = c++ -Wall -Werror -O -Wshadow -I/usr/local/include -D__MACOSX_CORE__ 
+all : $(EXEC_NAME)
 
-LDFLAGS=-lgsl -lgslcblas -lm -lpthread
+clean :
+	rm -f $(EXEC_NAME) $(OBJ_FILES)
 
-all:: main clean
-
-main: $(SIMUL)
-	$(C++) -L/usr/local/lib -o simulation $(SIMUL) $(LDFALGS)
-
-
--include $(SIMUL:.o=.d)
+$(EXEC_NAME) : $(OBJ_FILES)
+	$(CC) -o $(EXEC_NAME) $(OBJ_FILES) $(LIBS)
 
 %.o: %.cpp
-	$(C++) -c $*.cpp -o $*.o -Wall -Wshadow -Werror -O
-	$(C++) -MM $*.cpp > $*.d
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ -c $<
 
-clean::
-	@rm *.o
+%.o: %.c
+	gcc $(CFLAGS) $(INCLUDES) -o $@ -c $<
 
+install :
+	cp $(EXEC_NAME) $(INSTALL_DIR)
