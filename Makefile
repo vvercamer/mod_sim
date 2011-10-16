@@ -1,12 +1,13 @@
 SIMUL = main.o 
 
-C++ = c++ -Wall -Werror -O -Wshadow -D__MACOSX_CORE__
+C++ = c++ -Wall -Werror -O -Wshadow -I/usr/local/include -D__MACOSX_CORE__ 
 
+LDFLAGS=-lgsl -lgslcblas -lm -lpthread
 
-all: main
+all:: main clean
 
 main: $(SIMUL)
-	$(C++) -o simulation $(SIMUL) -lpthread
+	$(C++) -L/usr/local/lib -o simulation $(SIMUL) $(LDFALGS)
 
 
 -include $(SIMUL:.o=.d)
