@@ -1,9 +1,14 @@
 #ifndef RANDOM_H
 #define RANDOM_H
 
-void random_init (gsl_rng *r);
+#include <iostream>
+#include <gsl/gsl_rng.h>
+//#include <gsl/gsl_randist.h>
+
+extern gsl_rng* random_init (void);
 
 double uniform_law (void);
 
-#endif
+double arbitrary_law ();
 
+#endif

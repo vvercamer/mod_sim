@@ -27,7 +27,7 @@ GNUplot::GNUplot ()
 GNUplot::~GNUplot () 
 
 {
-	fprintf(gnuplotpipe, "exit\n");
+//	fprintf(gnuplotpipe, "exit\n");
 	pclose(gnuplotpipe);
 } 
 
