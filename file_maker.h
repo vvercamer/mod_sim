@@ -8,6 +8,6 @@
 
 using namespace std;
 
-int file_maker(double * x, double * y, int n);
+int file_maker(int * size, double ** outtable);
 
 #endif

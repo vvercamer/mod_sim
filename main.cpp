@@ -42,12 +42,17 @@ int main(int argc, char *argv[])
 
 	//Histogramme
 
+
+	int ncolumns = 2;
 	int nbhist = 100;
 	double hmin = -1;
 	double hmax = 1.1;
 	double *histogram = new double [nbhist];
 	double *N = new double [nbhist];
 	double *N2 = new double [nbhist];
+	double **outtable = new double* [nbhist];
+	for( i=0 ; i < nbhist ; i++ )
+    	outtable[i] = new double[ncolumns]; //2:nb de colonnes
 
 	size_t nhist = size_t(nbhist);	
 	gsl_histogram *h = gsl_histogram_alloc(nhist);
@@ -61,6 +66,8 @@ int main(int argc, char *argv[])
 		histogram[i] = gsl_histogram_get (h, i);
 		N[i] = (-(double(nbhist) - 1) / 2 + i) * hmax * 2 / nbhist;
 		N2[i] = hmin + (hmax - hmin) * (i + 1/2.) / nbhist ;
+		outtable[i][1]=N[i];
+		outtable[i][2]=histogram[i];
 	}
 	
 	gsl_histogram_free (h);
@@ -69,9 +76,14 @@ int main(int argc, char *argv[])
    	//GNUplot gp;dd
    	//gp.draw(N,histogram,nbhist);
    	
-   	//écriture dans les fichiers
-   	file_maker(N,histogram,nbhist);
    	
+   	
+   	int *size = new int [2];
+   	size[1] = nbhist; // lignes
+   	size[2] = ncolumns; // colonnes 
+   	//écriture dans les fichiers (taille, pointeur vers un tableau)
+   	file_maker(size, outtable);
+   	delete size;
 	
 	// ménage
 	gsl_rng_free (r);
