@@ -9,19 +9,17 @@ using namespace std;
 #include <gsl/gsl_histogram.h>
 
 #include "random.h"
-#include "gnuplot.h"
+#include "file_maker.h"
+//#include "gnuplot.h"
 
 int main(int argc, char *argv[])
 {
 
+	cout << "Début" << endl;
 	//initialisation random
 	gsl_rng *r;
 	r = random_init();
 	
-//	double y=0;
-//	y = arbitrary_law();
-//	cout << y << endl;
-
 	// uniform, gaussian, exponential and arbitrary laws
 	
 	double sigma=1;
@@ -68,8 +66,12 @@ int main(int argc, char *argv[])
 	gsl_histogram_free (h);
 
 	//Gnuplot
-   	GNUplot gp;
-   	gp.draw(N,histogram,nhist);
+   	//GNUplot gp;dd
+   	//gp.draw(N,histogram,nbhist);
+   	
+   	//écriture dans les fichiers
+   	file_maker(N,histogram,nbhist);
+   	
 	
 	// ménage
 	gsl_rng_free (r);
@@ -80,9 +82,10 @@ int main(int argc, char *argv[])
 	delete N;
 	delete N2;
 	delete histogram;
-//	delete gp;
 	
-	cout << "salut" << endl;
+	
+	
+	cout << "Fin" << endl;
 
 	return 0;
 }

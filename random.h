@@ -1,5 +1,5 @@
-#ifndef RANDOM_H_INCLUDED
-#define RANDOM_H_INCLUDED
+#ifndef _RANDOM_H_INCLUDED
+#define _RANDOM_H_INCLUDED
 
 #include <iostream>
 #include <gsl/gsl_rng.h>

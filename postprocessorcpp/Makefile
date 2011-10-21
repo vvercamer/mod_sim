@@ -2,10 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Werror -O2 -Wshadow
 EXEC_NAME = postprocessor
 INCLUDES = 
-#-I/usr/local/include
 LIBS = 
-#-L/usr/local/lib -lgsl -lgslcblas -lm 
-# -lpthread 
 OBJ_FILES = postprocessor.o gnuplot_i.o
 INSTALL_DIR = /usr/bin
 

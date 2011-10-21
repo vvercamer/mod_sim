@@ -1,6 +1,7 @@
 *.o
 .DS_Store
 *.swp
+*.csv
 gnuplot
 dacav-gnupplus-00d77ae
 simulation
