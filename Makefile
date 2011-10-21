@@ -2,7 +2,8 @@ CC = g++
 CFLAGS = -Wall -Werror -O2 -Wshadow
 EXEC_NAME = simulation
 INCLUDES = -I/usr/local/include
-LIBS = -L/usr/local/lib -lgsl -lgslcblas -lm -lpthread -D__MACOSX_CORE__ 
+LIBS = -L/usr/local/lib -lgsl -lgslcblas -lm 
+# -lpthread 
 OBJ_FILES = main.o random.o gnuplot.o
 INSTALL_DIR = /usr/bin
 

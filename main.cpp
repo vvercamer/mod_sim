@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
 	delete N;
 	delete N2;
 	delete histogram;
+//	delete gp;
 	
 	cout << "salut" << endl;
 
