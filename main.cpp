@@ -10,12 +10,22 @@ using namespace std;
 
 #include "random.h"
 #include "file_maker.h"
+#include "particule.h"
 //#include "gnuplot.h"
 
 int main(int argc, char *argv[])
 {
 
 	cout << "Début" << endl;
+	
+	//test Particule
+	
+	Particule p;
+	
+	p.setX(3);
+	
+	cout << p.getX() << endl;
+	
 	//initialisation random
 	gsl_rng *r;
 	r = random_init();
