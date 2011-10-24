@@ -5,13 +5,17 @@ Particle::Particle(double a, double b, double c){
 	x = a;
 	y = b;
 	z = c;
-	n_particle++;
+	n_particles++;
 };
 
 Particle::~Particle(){
-	n_particle--;	
+	n_particles--;	
 };
 
+void Particle::count ()
+{
+        cout << n_particles << " particules(s)" << endl;
+}
 
 //void Particle::setX(double a){
 //	x = a;

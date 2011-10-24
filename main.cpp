@@ -13,6 +13,8 @@ using namespace std;
 #include "particle.h"
 //#include "gnuplot.h"
 
+int Particle::n_particles = 0;
+
 int main(int argc, char *argv[])
 {
 
