@@ -10,22 +10,24 @@ using namespace std;
 
 #include "random.h"
 #include "file_maker.h"
-#include "particule.h"
+#include "particle.h"
 //#include "gnuplot.h"
 
 int main(int argc, char *argv[])
 {
 
-	cout << "Début" << endl;
+	cout << "Start" << endl;
 	
-	//test Particule
+	//test Particle
 	
-	Particule p;
+	Particle p(4,2,1);
+			
+//	p.setX(3);
 	
-	p.setX(3);
-	
-	cout << p.getX() << endl;
-	
+	cout << "x= " << p.getX() << endl;
+	cout << "y= " << p.getY() << endl;
+	cout << "z= " << p.getZ() << endl;
+		
 	//initialisation random
 	gsl_rng *r;
 	r = random_init();
@@ -107,7 +109,7 @@ int main(int argc, char *argv[])
 	
 	
 	
-	cout << "Fin" << endl;
+	cout << "The END" << endl;
 
 	return 0;
 }
