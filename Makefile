@@ -4,7 +4,7 @@ EXEC_NAME = simulation
 INCLUDES = -I/usr/local/include
 LIBS = -L/usr/local/lib -lgsl -lgslcblas -lm 
 # -lpthread 
-OBJ_FILES = main.o random.o file_maker.o particle.o
+OBJ_FILES = main.o random.o file_maker.o particle.o source.o experiment.o
 #gnuplot.o
 INSTALL_DIR = /usr/bin
 

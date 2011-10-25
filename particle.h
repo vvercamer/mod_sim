@@ -1,6 +1,7 @@
 #ifndef _PARTICLE_H_INCLUDED
 #define _PARTICLE_H_INCLUDED
 
+#include <vector> //http://www.fredosaurus.com/notes-cpp/stl-containers/vector/header-vector.html
 #include <iostream>
 using namespace std;
 
@@ -10,7 +11,8 @@ private : // définition les données membres de la classe
 	int type;
 	double x, y, z;
 	double theta, phi;
-	double impulse;
+	vector<double> position;
+	vector<double> impulse;
 	double energy;
 public : // définition les fonctions membres de la classe
 	Particle(double = 0.0, double = 0.0, double = 0.0);
@@ -23,6 +25,7 @@ public : // définition les fonctions membres de la classe
 	void setX(double a){x=a;};
 	void setY(double b){y=b;};
 	void setZ(double c){z=c;};
+//	void setPosition(){};
 	void count (void);
 	double Parcours(void);
 	void Propagation(void);

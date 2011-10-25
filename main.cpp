@@ -10,30 +10,31 @@ using namespace std;
 
 #include "random.h"
 #include "file_maker.h"
-#include "particle.h"
 //#include "gnuplot.h"
 
-int Particle::n_particles = 0;
 
 int main(int argc, char *argv[])
 {
 
 	cout << "Start" << endl;
-	
+
+
+// ********** BAC A SABLE **********	
 	//test Particle
 	
-	Particle p(4,2,1);
+//	Particle p(4,2,1);
 	
 //	Particle *primaire = new Particle();
-	
-	
-	
+
 			
 //	p.setX(3);
 	
 
-	cout << "y= " << p.getY() << endl;
-	cout << "z= " << p.getZ() << endl;
+//	cout << "y= " << p.getY() << endl;
+//	cout << "z= " << p.getZ() << endl;
+
+// ********** FIN BAC A SABLE **********	
+
 		
 	//initialisation random
 	gsl_rng *r;
