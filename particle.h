@@ -23,8 +23,10 @@ public : // définition les fonctions membres de la classe
 	void setX(double a){x=a;};
 	void setY(double b){y=b;};
 	void setZ(double c){z=c;};
-	void count ();
-//	double Parcours();
+	void count (void);
+	double Parcours(void);
+	void Propagation(void);
+	void Interaction(void);
 };
 
 #endif

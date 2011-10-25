@@ -23,10 +23,15 @@ int main(int argc, char *argv[])
 	//test Particle
 	
 	Particle p(4,2,1);
+	
+//	Particle *primaire = new Particle();
+	
+	
+	
 			
 //	p.setX(3);
 	
-	cout << "x= " << p.getX() << endl;
+
 	cout << "y= " << p.getY() << endl;
 	cout << "z= " << p.getZ() << endl;
 		

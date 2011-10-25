@@ -12,7 +12,7 @@ Particle::~Particle(){
 	n_particles--;	
 };
 
-void Particle::count ()
+void Particle::count(void)
 {
         cout << n_particles << " particules(s)" << endl;
 }
@@ -29,6 +29,15 @@ void Particle::count ()
 //	z = a;
 //}
 
-//double Particle::Parcours(){
-// Instructions composant le corps de la fonction;
-//};
+double Particle::Parcours(){
+
+return 0;
+};
+
+void Particle::Propagation(void){
+
+};
+
+void Particle::Interaction(void){
+
+};
