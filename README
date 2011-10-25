@@ -13,16 +13,22 @@ corps du programme
 II.1.2 experiment
 création et déroulement de l'expérience
 
-II.1.3 source
-définition de la source
-
-II.1.4 particle
-définition des particules
-
-II.1.5 random
+II.1.3 random
 définition des générateurs aléatoires
 
-II.1.6 file_maker
+II.1.4 source
+définition de la source
+
+II.1.5 particle
+définition des particules
+
+II.1.6 collimator
+
+II.1.7 enclosure
+
+II.1.8 detector
+
+II.1.9 file_maker
 créer les fichiers de sortie
 
 II.2. Les différentes classes
