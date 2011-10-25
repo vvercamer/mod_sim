@@ -7,6 +7,7 @@ class Experiment {
 private :
 	Source *source;
 	Particle *stack;
+	//plus tard : initialiser l'enceinte, le collimateur et le détecteur.
 	
 public :
 	Experiment();
