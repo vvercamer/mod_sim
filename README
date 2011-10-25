@@ -26,7 +26,11 @@ II.1.6 file_maker
 créer les fichiers de sortie
 
 II.2. Les différentes classes
-II.2.1. Experimement 
+II.2.1. Experimement
+
+Experiment::StartOfRun() : fonction qui n’est appelée qu’une seul fois au cours de l’exécution du programme. Elle sert à l’initialisation des variables globale et à la création de quelques instances de classes qui sont produites de façon unique lors de la simulation. C’est le cas de la source.
+
+Experiment::Event() : fonction appelée pour chaque événement engendré par l’émission d’une particule de la source. créé la particule primaire émise par la classe source à chaque événement. Cette donnée permet par la suite de gérer toutes les particules qui seront produites dans la traversée du détecteur par la particule primaire.
 
 II.2.2. Source
 Particle* Source::Init(void) : créé la première particule d'une expérience

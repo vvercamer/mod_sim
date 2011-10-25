@@ -5,10 +5,16 @@
 
 class Experiment {
 private :
+	Source *source;
+	Particle *stack;
 	
 public :
 	Experiment();
 	~Experiment();
+	void StartOfRun(int, char **);
+	void EndOfRun();
+	void Event();
+
 };
 
 #endif
