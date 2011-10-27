@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <math.h>
 #include <gsl/gsl_math.h>
 using namespace std;
@@ -15,9 +16,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-
 	cout << "Start" << endl;
-
 
 // ********** BAC A SABLE **********	
 	//test Particle
@@ -86,8 +85,8 @@ int main(int argc, char *argv[])
 		histogram[i] = gsl_histogram_get (h, i);
 		N[i] = (-(double(nbhist) - 1) / 2 + i) * hmax * 2 / nbhist;
 		N2[i] = hmin + (hmax - hmin) * (i + 1/2.) / nbhist ;
-		outtable[i][1]=N[i];
-		outtable[i][2]=histogram[i];
+		outtable[i][0]=N[i];
+		outtable[i][1]=histogram[i];
 	}
 	
 	gsl_histogram_free (h);
@@ -96,17 +95,37 @@ int main(int argc, char *argv[])
    	//GNUplot gp;dd
    	//gp.draw(N,histogram,nbhist);
    	
-   	
+
    	
    	int *size = new int [2];
-   	size[1] = nbhist; // lignes
-   	size[2] = ncolumns; // colonnes 
-   	//écriture dans les fichiers (taille, pointeur vers un tableau)
-   	file_maker(size, outtable);
+   	size[0] = nbhist; // lignes
+   	size[1] = ncolumns; // colonnes 
+   	string filename="test.csv";
+   	//écriture dans les fichiers (taille, pointeur vers un tableau, nom fichier)
+   	file_maker(size, outtable, filename);
+
+   	size[0] = n;
+   	size[1] = 1;
+
+	double **outtable2 = new double* [n];
+	for( i=0 ; i < n ; i++ )
+    	outtable2[i] = new double[2]; //1:nb de colonnes
+
+   	filename = "data";
+   	for ( i = 0 ; i < n ; i++) {
+	   	outtable2[i][0] = omega3[i];
+	   	outtable2[i][1] =0;
+   	}
+	cout << "The END" << endl;
+
+   	
+   	file_maker(size, outtable2, filename);   	
    	delete size;
 	
 	// ménage
 	gsl_rng_free (r);
+	delete outtable;
+	delete outtable2;
 	delete omega0;
 	delete omega1;
 	delete omega2;

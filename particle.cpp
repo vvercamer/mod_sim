@@ -1,37 +1,32 @@
 #include "particle.h"
 
-Particle::Particle(double a, double b, double c){
-	
-	x = a;
-	y = b;
-	z = c;
-	n_particles++;
+Particle::Particle(){
+	n_particles_++;
 };
 
 Particle::~Particle(){
-	n_particles--;	
+	n_particles_--;	
 };
 
 void Particle::count(void)
 {
-        cout << n_particles << " particules(s)" << endl;
+        cout << n_particles_ << " particules(s)" << endl;
 }
 
-//void Particle::setX(double a){
-//	x = a;
-//}
-//
-//void Particle::setY(double a){
-//	y = a;
-//}
+int Particle::getType(void)
+{
+	return type_;
+};
 
-//void Particle::setZ(double a){
-//	z = a;
-//}
+void Particle::setType(int type)
+{
+	type_ = type;
+};
+
+
 
 double Particle::Parcours(){
-
-return 0;
+	return 0;
 };
 
 void Particle::Propagation(void){

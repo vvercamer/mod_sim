@@ -5,8 +5,8 @@
 
 class Experiment {
 private :
-	Source *source;
-	Particle *stack;
+	Source *source_;
+	Particle *stack_;
 	//plus tard : initialiser l'enceinte, le collimateur et le détecteur.
 	
 public :

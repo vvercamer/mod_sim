@@ -21,5 +21,5 @@ void Experiment::Event(){
 
 };
 
-int Particle::n_particles = 0; //à déplacer plus tard.
+int Particle::n_particles_ = 0; //à déplacer plus tard.
 

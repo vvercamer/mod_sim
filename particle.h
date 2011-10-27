@@ -6,27 +6,23 @@
 using namespace std;
 
 class Particle {
-private : // définition les données membres de la classe
-	static int n_particles;
-	int type;
-	double x, y, z;
-	double theta, phi;
-	vector<double> position;
-	vector<double> impulse;
-	double energy;
+private : // définition les données membres de la classe
+	static int n_particles_;
+	int type_;
+	double theta_, phi_;
+	vector<double> position_;
+	vector<double> impulse_;
+	double energy_;
+	Particle *next_;
+	Particle *prev_;
+	
 public : // définition les fonctions membres de la classe
-	Particle(double = 0.0, double = 0.0, double = 0.0);
+	Particle();
 	~Particle();
-	void Type(int t){type = t;};
-	int Type(){return(type);};
-	double getX(){return(x);};
-	double getY(){return(y);};
-	double getZ(){return(z);};
-	void setX(double a){x=a;};
-	void setY(double b){y=b;};
-	void setZ(double c){z=c;};
+	int getType(void);
+	void setType(int);
 //	void setPosition(){};
-	void count (void);
+	void count(void);
 	double Parcours(void);
 	void Propagation(void);
 	void Interaction(void);
