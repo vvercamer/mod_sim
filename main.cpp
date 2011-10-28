@@ -116,23 +116,21 @@ int main(int argc, char *argv[])
 	   	outtable2[i][0] = omega3[i];
 	   	outtable2[i][1] =0;
    	}
-	cout << "The END" << endl;
-
    	
    	file_maker(size, outtable2, filename);   	
-   	delete size;
+   	delete [] size;
 	
 	// ménage
 	gsl_rng_free (r);
-	delete outtable;
-	delete outtable2;
-	delete omega0;
-	delete omega1;
-	delete omega2;
-	delete omega3;
-	delete N;
-	delete N2;
-	delete histogram;
+	delete [] outtable;
+	delete [] outtable2;
+	delete [] omega0;
+	delete [] omega1;
+	delete [] omega2;
+	delete [] omega3;
+	delete [] N;
+	delete [] N2;
+	delete [] histogram;
 	
 	
 	

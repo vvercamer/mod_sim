@@ -2,8 +2,8 @@
 
 Detector::Detector(){
 
-};
+}
 
 Detector::~Detector(){
 	
-};
+}

@@ -2,8 +2,8 @@
 
 Collimator::Collimator(){
 
-};
+}
 
 Collimator::~Collimator(){
 	
-};
+}

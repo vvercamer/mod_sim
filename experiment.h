@@ -15,6 +15,7 @@ public :
 	void StartOfRun(int, char **);
 	void EndOfRun();
 	void Event();
+	Particle* getStack();
 
 };
 

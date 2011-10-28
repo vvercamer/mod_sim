@@ -9,7 +9,7 @@ int file_maker(int * size, double ** outtable, const string &filename)
 
 	ofstream outfile(a, ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
 
-	delete a;
+	delete [] a;
 
 	int i,j;
 	

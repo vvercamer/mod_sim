@@ -2,8 +2,8 @@
 
 Enclosure::Enclosure(){
 
-};
+}
 
 Enclosure::~Enclosure(){
 	
-};
+}
