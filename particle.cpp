@@ -1,6 +1,6 @@
 #include "particle.h"
 
-Particle::Particle(int type, Particle * next, Particle * prev): type_(type), next_(next), prev_(prev)
+Particle::Particle(int type, Particle * prev): type_(type), next_(0), prev_(prev)
 {
 	n_particles_++;
 }
@@ -13,7 +13,7 @@ Particle::~Particle()
 
 void Particle::countParticles(void)
 {
-        cout << n_particles_ << " particules(s)" << endl;
+        cerr << n_particles_ << " particules(s)" << endl;
 }
 
 int Particle::getType(void)

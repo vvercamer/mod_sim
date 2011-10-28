@@ -6,17 +6,19 @@
 class Experiment {
 private :
 	Source *source_;
-	Particle *stack_;
+	Particle *topOfStack_;
 	//plus tard : initialiser l'enceinte, le collimateur et le détecteur.
 	
 public :
 	Experiment();
 	~Experiment();
-	void StartOfRun(int, char **);
-	void EndOfRun();
-	void Event();
-	Particle* getStack();
-
+//	void StartOfRun(int, char **);
+//	void EndOfRun();
+	void event();
+	Particle* getTopOfStack();
+	void setTopOfStack(Particle*);
+	void showStack();
+	void add2Stack(Particle *);
 };
 
 #endif

@@ -17,7 +17,7 @@ private : // définition les données membres de la classe
 	Particle *prev_;
 	
 public : // définition les fonctions membres de la classe
-	Particle(int, Particle *, Particle *);
+	Particle(int, Particle *);
 	~Particle();
 	int getType();
 	void setType(int);

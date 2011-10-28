@@ -11,7 +11,7 @@ public :
 	~Source();
 //	double getEnergy(void){return(energy);};
 //	void setEnergy(double a){energy=a;};
-	Particle* initializeParticle(void);
+	Particle* emitParticle();
 };
 
 #endif

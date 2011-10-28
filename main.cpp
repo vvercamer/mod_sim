@@ -11,6 +11,7 @@ using namespace std;
 
 #include "random.h"
 #include "file_maker.h"
+#include "experiment.h"
 //#include "gnuplot.h"
 
 
@@ -19,18 +20,8 @@ int main(int argc, char *argv[])
 	cout << "Start" << endl;
 
 // ********** BAC A SABLE **********	
-	//test Particle
-	
-//	Particle p(4,2,1);
-	
-//	Particle *primaire = new Particle();
-
-			
-//	p.setX(3);
-	
-
-//	cout << "y= " << p.getY() << endl;
-//	cout << "z= " << p.getZ() << endl;
+	Experiment* experiment = new Experiment;
+	experiment->event();	
 
 // ********** FIN BAC A SABLE **********	
 
