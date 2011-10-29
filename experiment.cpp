@@ -25,12 +25,24 @@ Experiment::~Experiment()
 
 void Experiment::event()
 {
-	Particle* current = source_->emitParticle();
-	topOfStack_=current;
-		
-//	cout << current->getType() << endl;
-	showStack();
+	topOfStack_ = source_->emitParticle();
 	
+	Particle* particle;
+	int n=4;
+	int i;	for (i = 0 ; i < n ; i++){		particle = new Particle(0,0);
+		add2Stack(particle);
+		particle->countParticles();
+		showStack();
+	}
+
+	while (topOfStack_->getPrev() != 0){
+		removeFromStack(topOfStack_);
+		particle->countParticles();
+		//cerr << "il y a " << n << " particules dans la piles"<< endl;
+		n--;
+		showStack();
+	}
+
 }
 
 Particle * Experiment::getTopOfStack()
@@ -58,10 +70,12 @@ void Experiment::add2Stack(Particle * particle)
 	topOfStack_ = particle;
 }
 
-//void Experience:: AddTrack(int Type, int Charge, float Energy)
-//{//	Particle * Track = new Particule();
-//	Track -> Next( firsttrack);//	if (firsttrack) firsttrack -> Prev(Track);
-//	firsttrack = Track;//}
+void Experiment::removeFromStack(Particle * particle)
+{
+		topOfStack_ = particle->getPrev();
+		topOfStack_ -> setNext(0);
+		delete particle;
+}
 
 int Particle::n_particles_ = 0; //à déplacer plus tard.
 

@@ -2,6 +2,9 @@
 #define _EXPERIMENT_H_INCLUDED
 #include "particle.h"
 #include "source.h"
+#include <iostream>
+using namespace std;
+
 
 class Experiment {
 private :
@@ -19,6 +22,7 @@ public :
 	void setTopOfStack(Particle*);
 	void showStack();
 	void add2Stack(Particle *);
+	void removeFromStack(Particle *);
 };
 
 #endif

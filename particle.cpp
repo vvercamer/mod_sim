@@ -8,15 +8,20 @@ Particle::Particle(int type, Particle * prev): type_(type), next_(0), prev_(prev
 Particle::~Particle()
 {
 	n_particles_--;
-	
 }
 
-void Particle::countParticles(void)
+void Particle::countParticles()
 {
-        cerr << n_particles_ << " particules(s)" << endl;
+	if (n_particles_ < 2){
+		cerr << "il y a " << n_particles_ << " particule dans la piles"<< endl;
+	}
+	else
+	{
+		cerr << "il y a " << n_particles_ << " particules dans la piles"<< endl;
+	}
 }
 
-int Particle::getType(void)
+int Particle::getType()
 {
 	return type_;
 }
