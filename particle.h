@@ -5,6 +5,11 @@
 #include <iostream>
 using namespace std;
 
+// définition des types
+#define PHOTON 0
+#define ELECTRON 1
+
+
 class Particle {
 private : // définition les données membres de la classe
 	static int n_particles_;
