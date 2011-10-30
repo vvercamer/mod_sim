@@ -2,6 +2,7 @@
 #define _RANDOM_H_INCLUDED
 
 #include <iostream>
+using namespace std;
 #include <gsl/gsl_rng.h>
 #include <math.h>
 //#include <gsl/gsl_randist.h>

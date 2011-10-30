@@ -5,7 +5,6 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
 using namespace std;
 
 int file_maker(int * size, double ** outtable, const string &filename);

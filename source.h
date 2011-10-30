@@ -2,6 +2,9 @@
 #define _SOURCE_H_INCLUDED
 #include "particle.h"
 
+#include <iostream>
+using namespace std;
+
 class Source {
 private :
 //	double energy;

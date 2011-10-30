@@ -1,20 +1,23 @@
 #ifndef _DETECTOR_H_INCLUDED
 #define _DETECTOR_H_INCLUDED
 
+#include <iostream>
+using namespace std;
+
 class Detector {
 private :
 	double eta_;
 	double QE_;
 	double CE_;
 	double nDynodes_;
-	double [nDynodes_] g_;
+	double *g_;
 	int Z_;
 	int A_;
 	int pressure_;
 	int density_;
 		
 public :
-	Detector();
+	Detector(int);
 	~Detector();
 };
 
