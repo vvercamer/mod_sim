@@ -5,6 +5,8 @@
 #include <iostream>
 using namespace std;
 
+//#include "probabilities.h"
+
 // définition des types
 #define PHOTON 0
 #define ELECTRON 1

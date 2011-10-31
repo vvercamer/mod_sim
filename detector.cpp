@@ -19,3 +19,11 @@ Detector::~Detector()
 		delete [] g_;
 	}
 }
+
+
+//Photo-electrique ://PHOTON + Na => e- + Na+*
+//PHOTON + I => e- + I+*
+//
+//Compton ://PHOTON + Na => X'+ e- + Na+*
+//PHOTON + I => X'+ e- + I+*
+////Création de paires ://PHOTON + Na => e+ + e- + Na//PHOTON + I => e+ + e- + I
