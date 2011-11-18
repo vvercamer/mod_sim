@@ -1,13 +1,16 @@
 #ifndef _PROBABILITIES_H_INCLUDED
 #define _PROBABILITIES_H_INCLUDED
 
+#ifdef __MAIN__
+
 //#define PHOTO_ELECTRIC 1
 //#define COMPTON 2
 //#define PAIRE 3
 
+
 int nProbabilities=30;
 
-/* les energies sont exprimees en eV */
+// les energies sont exprimees en eV
 double energyProbability[] = 
 	{
 		100,
@@ -143,4 +146,6 @@ double pairProductionProbability[] =
 		0.37422,
 		0.443459
 	};
+#endif
+
 #endif

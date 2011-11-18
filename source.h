@@ -7,10 +7,10 @@ using namespace std;
 
 class Source {
 private :
-//	double energy;
+	double energy_;
 	
 public :
-	Source();
+	Source(double energy);
 	~Source();
 //	double getEnergy(void){return(energy);};
 //	void setEnergy(double a){energy=a;};

@@ -1,6 +1,6 @@
 #include "source.h"
 
-Source::Source()
+Source::Source(double energy) : energy_(energy)
 {
 	
 }

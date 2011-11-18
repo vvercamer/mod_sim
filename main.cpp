@@ -13,20 +13,14 @@ using namespace std;
 #include "file_maker.h"
 #include "experiment.h"
 //#include "gnuplot.h"
-#include "probabilities.h"
 
 int main(int argc, char *argv[])
 {
 	cout << "Start" << endl;
 
 // ********** BAC A SABLE **********	
-	Experiment* experiment = new Experiment;
+	Experiment* experiment = new Experiment(49500); //49,5 keV pour le thorium
 	experiment->event();	
-
-	int j;
-	for (j=0 ; j < nProbabilities ; j++){
-		cout << energyProbability[j] << ";" << photoelectricProbability[j] << ";" << comptonProbability[j] << ";" << pairProductionProbability[j] << endl;
-	}
 
 // ********** FIN BAC A SABLE **********	
 

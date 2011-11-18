@@ -1,9 +1,9 @@
 #include "experiment.h"
 
-Experiment::Experiment()
+Experiment::Experiment(double energy)
 {
 	topOfStack_=0;
-	source_=new Source;
+	source_=new Source(energy);
 }
 
 Experiment::~Experiment()
