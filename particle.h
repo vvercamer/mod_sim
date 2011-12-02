@@ -6,6 +6,9 @@
 using namespace std;
 
 #include "probabilities.h"
+#include "random.h"
+#include <gsl/gsl_sf_log.h>			// ln
+#include <gsl/gsl_randist.h> // loi exp
 
 // définition des types
 #define PHOTON 0
@@ -17,6 +20,7 @@ using namespace std;
 class Particle {
 private : // définition les données membres de la classe
 	static int n_particles_;
+	gsl_rng * rng_;
 	int type_;
 	double theta_, phi_, energy_;
 	double position_[3];
@@ -24,7 +28,7 @@ private : // définition les données membres de la classe
 	Particle *prev_;
 	
 public : // définition les fonctions membres de la classe
-	Particle(int, Particle *);
+	Particle(gsl_rng *, int, Particle *);
 	~Particle();
 	int getType();
 	void setType(int);
@@ -33,7 +37,7 @@ public : // définition les fonctions membres de la classe
 	Particle* getPrev();	void setPrev(Particle*);
 	void countParticles();
 	double Parcours();
-	void Propagation();
+	double Propagation(double);
 	void Interaction();
 };
 

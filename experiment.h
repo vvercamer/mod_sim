@@ -2,6 +2,7 @@
 #define _EXPERIMENT_H_INCLUDED
 #include "particle.h"
 #include "source.h"
+#include "random.h"
 #include <iostream>
 using namespace std;
 
@@ -10,6 +11,7 @@ class Experiment {
 private :
 	Source *source_;
 	Particle *topOfStack_;
+	gsl_rng *rng_;
 	//plus tard : initialiser l'enceinte, le collimateur et le détecteur.
 	
 public :

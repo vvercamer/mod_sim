@@ -1,9 +1,9 @@
 #include "experiment.h"
 
-Experiment::Experiment(double energy)
+Experiment::Experiment(double energy): topOfStack_(0)
 {
-	topOfStack_=0;
-	source_=new Source(energy);
+	rng_ = random_init();
+	source_ = new Source(rng_,energy);	
 }
 
 Experiment::~Experiment()
@@ -29,7 +29,7 @@ void Experiment::event()
 	
 	Particle* particle;
 	int n=4;
-	int i;	for (i = 0 ; i < n ; i++){		particle = new Particle(0,0);
+	int i;	for (i = 0 ; i < n ; i++){		particle = new Particle(rng_,0,0);
 		add2Stack(particle);
 		particle->countParticles();
 		showStack();

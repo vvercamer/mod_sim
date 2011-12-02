@@ -43,8 +43,6 @@ double arbitrary_function(double x)
 //double gaussian_law	
 
 
-
-
 //double exponential_law (int n)
 //{
 //	

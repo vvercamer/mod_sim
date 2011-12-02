@@ -1,6 +1,6 @@
 #include "particle.h"
 
-Particle::Particle(int type, Particle * prev): type_(type), next_(0), prev_(prev)
+Particle::Particle(gsl_rng * rng, int type, Particle * prev): rng_(rng), type_(type), next_(0), prev_(prev)
 {
 	n_particles_++;
 }
@@ -55,8 +55,10 @@ double Particle::Parcours(){
 	return 0;
 }
 
-void Particle::Propagation(void){
-
+double Particle::Propagation(double lambda){
+	double L=0;
+	L=lambda*gsl_sf_log(gsl_ran_exponential(rng_, lambda)*lambda); //gsl_ran_exponential(r, lambda) = 1/lambda * exp(−x/lambda)
+	return L;
 }
 
 void Particle::Interaction(void){
