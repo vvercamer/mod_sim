@@ -24,7 +24,7 @@ public :
 	void setTopOfStack(Particle*);
 	void showStack();
 	void add2Stack(Particle *);
-	void removeFromStack(Particle *);
+	void removeTopOfStack();
 };
 
 #endif

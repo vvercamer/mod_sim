@@ -4,10 +4,14 @@
 gsl_rng* random_init()
 {
 	srand(time(NULL));
-	const gsl_rng_type* T;
-	gsl_rng_env_setup();
-	T = gsl_rng_default;
-	return gsl_rng_alloc(T);
+//	const gsl_rng_type* T;
+//	gsl_rng_env_setup();
+//	T = gsl_rng_default;
+//	return gsl_rng_alloc(T);
+	gsl_rng * rand_gen;
+	rand_gen = gsl_rng_alloc(gsl_rng_taus);
+  gsl_rng_set(rand_gen,time(NULL));
+  return rand_gen;
 }
 
 double uniform_law()

@@ -7,7 +7,7 @@ using namespace std;
 
 class Source {
 private :
-	gsl_rng * rng_;
+	gsl_rng* rng_;
 	double energy_;
 	
 public :

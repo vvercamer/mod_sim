@@ -3,7 +3,7 @@
 Experiment::Experiment(double energy): topOfStack_(0)
 {
 	rng_ = random_init();
-	source_ = new Source(rng_,energy);	
+	source_ = new Source(rng_, energy);	
 }
 
 Experiment::~Experiment()
@@ -25,24 +25,20 @@ Experiment::~Experiment()
 
 void Experiment::event()
 {
-	topOfStack_ = source_->emitParticle();
-	
-	Particle* particle;
-	int n=4;
-	int i;	for (i = 0 ; i < n ; i++){		particle = new Particle(rng_,0,0);
-		add2Stack(particle);
-		particle->countParticles();
-		showStack();
-	}
+	add2Stack(source_->emitParticle());
+	add2Stack(source_->emitParticle());
+	add2Stack(source_->emitParticle());
 
-	while (topOfStack_->getPrev() != 0){
-		removeFromStack(topOfStack_);
-		particle->countParticles();
-		//cerr << "il y a " << n << " particules dans la piles"<< endl;
-		n--;
+	while (topOfStack_ != 0){
+		Particle* current = topOfStack_;
 		showStack();
-	}
 
+		cerr << "-- DEBUG -- Taking care of particle " << current << endl;
+		removeTopOfStack();
+		current->countParticles();
+		cerr << "-- DEBUG -- distance de propagation : " << current->Propagation(1) << endl;
+		delete current;
+	}
 }
 
 Particle * Experiment::getTopOfStack()
@@ -56,25 +52,43 @@ void Experiment::setTopOfStack(Particle* topOfStack){
 
 void Experiment::showStack()
 {
-	Particle* current = topOfStack_;
-	do{
-			cout << current << endl;
-			current=current->getPrev();
-	}while(current != 0);
+	cerr << "-- INFO -- Show stack" << endl;
+	int i=0;
+	if(topOfStack_ != 0) {
+		Particle* current = topOfStack_;
+		do{
+				cout << current << endl;
+				current=current->getNext();
+				i++;
+		}while(current != 0);
+	}
+	else {
+		cerr << "-- ERROR -- Attempted to show an empty stack !" << endl;
+	}
+	cerr << "-- INFO -- there are "<< i << " particles in the stack" << endl;
 }
 
 void Experiment::add2Stack(Particle * particle)
 {
-	topOfStack_ -> setNext(particle);
-	particle -> setPrev(topOfStack_);
+	particle -> setNext(topOfStack_);
 	topOfStack_ = particle;
 }
 
-void Experiment::removeFromStack(Particle * particle)
+void Experiment::removeTopOfStack()
 {
-		topOfStack_ = particle->getPrev();
-		topOfStack_ -> setNext(0);
-		delete particle;
+	if(topOfStack_ != 0) {
+		Particle * currentFirst = topOfStack_;
+		if(currentFirst -> getNext() != 0) {
+			topOfStack_ = currentFirst -> getNext();
+			currentFirst -> setNext(0);
+		}
+		else {
+			topOfStack_ = 0;
+		}
+	}
+	else {
+		cerr << "-- ERROR -- Attempted to remove a particule from an empty stack !" << endl;
+	}
 }
 
 int Particle::n_particles_ = 0; //à déplacer plus tard.

@@ -25,7 +25,6 @@ private : // définition les données membres de la classe
 	double theta_, phi_, energy_;
 	double position_[3];
 	Particle *next_;
-	Particle *prev_;
 	
 public : // définition les fonctions membres de la classe
 	Particle(gsl_rng *, int, Particle *);
@@ -34,7 +33,6 @@ public : // définition les fonctions membres de la classe
 	void setType(int);
 //	void setPosition(){};
 	Particle* getNext();	void setNext(Particle*);
-	Particle* getPrev();	void setPrev(Particle*);
 	void countParticles();
 	double Parcours();
 	double Propagation(double);
