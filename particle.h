@@ -33,6 +33,7 @@ public : // définition les fonctions membres de la classe
 	void setType(int);
 //	void setPosition(){};
 	Particle* getNext();	void setNext(Particle*);
+	int chooseInteractionType();
 	void countParticles();
 	double Parcours();
 	double Propagation(double);

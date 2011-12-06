@@ -16,21 +16,24 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	cout << "\n****************************************" << endl
+	cerr << "\n****************************************" << endl
 		   << "********  START THE SIMULATION  ********" << endl
 		   << "****************************************\n" << endl;
+	
+	int nDynodes = 5;
 	
 	int nEvents = 100;
 	if (argc == 2)
 		nEvents = atoi(argv[1]);
+	
 
-	cout << "-- INFO -- New experiment" << endl;		
-	Experiment* experiment = new Experiment(49500); //49,5 keV pour le thorium
+	cerr << "-- INFO -- New experiment" << endl;		
+	Experiment* experiment = new Experiment(49500,nDynodes); //energie 49,5 keV pour le thorium
 
-	cout << "-- INFO -- New event" << endl;	
+	cerr << "-- INFO -- New event" << endl;	
 	experiment->event();
 	
-	cout << "-- INFO -- The END" << endl;
+	cerr << "-- INFO -- The END" << endl;
 
 	return 0;
 }

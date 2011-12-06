@@ -1,9 +1,10 @@
 #include "experiment.h"
 
-Experiment::Experiment(double energy): topOfStack_(0)
+Experiment::Experiment(double energy, int nDynodes): topOfStack_(0)
 {
 	rng_ = random_init();
 	source_ = new Source(rng_, energy);	
+	detector_ = new Detector(nDynodes);
 }
 
 Experiment::~Experiment()
@@ -25,18 +26,29 @@ Experiment::~Experiment()
 
 void Experiment::event()
 {
+	double lambda = 1; // en m
+	double mu = 1;
 	add2Stack(source_->emitParticle());
 	add2Stack(source_->emitParticle());
 	add2Stack(source_->emitParticle());
 
 	while (topOfStack_ != 0){
 		Particle* current = topOfStack_;
-		showStack();
+		//showStack();
 
 		cerr << "-- DEBUG -- Taking care of particle " << current << endl;
 		removeTopOfStack();
-		current->countParticles();
-		cerr << "-- DEBUG -- distance de propagation : " << current->Propagation(1) << endl;
+		//current->countParticles();
+		
+
+		if ((mu = detector_->getDensity()) == 0){//*detector_->getCrossSection(current->getEnergy,NaI);
+			cerr << "-- ERROR -- Attempted to divide by ZERO (mu = 1/lambda) !" << endl;
+			exit(EXIT_FAILURE);
+		}
+		lambda = 1/mu;
+		current->Propagation(lambda);
+		current->Interaction();
+//		cerr << "-- DEBUG -- distance de propagation : " << current->Propagation(lambda) << endl;
 		delete current;
 	}
 }
@@ -64,6 +76,7 @@ void Experiment::showStack()
 	}
 	else {
 		cerr << "-- ERROR -- Attempted to show an empty stack !" << endl;
+		exit(EXIT_FAILURE);
 	}
 	cerr << "-- INFO -- there are "<< i << " particles in the stack" << endl;
 }
@@ -88,6 +101,7 @@ void Experiment::removeTopOfStack()
 	}
 	else {
 		cerr << "-- ERROR -- Attempted to remove a particule from an empty stack !" << endl;
+		exit(EXIT_FAILURE);
 	}
 }
 

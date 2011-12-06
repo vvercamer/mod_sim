@@ -41,6 +41,17 @@ void Particle::setNext(Particle *next)
 	next_=next;
 }
 
+int Particle::chooseInteractionType()
+{
+	int interactionType;
+	double x = uniform_law();
+		if (x<1)
+			interactionType=0;
+		else 
+			interactionType=1;
+	//energy_
+	return interactionType;
+}
 
 double Particle::Parcours(){
 	return 0;
@@ -53,5 +64,14 @@ double Particle::Propagation(double lambda){
 }
 
 void Particle::Interaction(void){
-
+	int interactionType = chooseInteractionType();
+	switch (interactionType)	{		case 0:
+			cerr << "-- DEBUG -- Photoelectric effect"<< endl;
+			break;
+		case 1:			cerr << "-- DEBUG -- Compton scattering"<< endl;			break;
+		case 2:			cerr << "-- DEBUG -- Pair production"<< endl;	
+			break;
+	}
 }
+
+
