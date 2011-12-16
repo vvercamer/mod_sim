@@ -7,6 +7,8 @@ using namespace std;
 
 #include "probabilities.h"
 #include "random.h"
+#include "interaction_data.h"
+
 #include <gsl/gsl_sf_log.h>			// ln
 #include <gsl/gsl_randist.h> // loi exp
 
@@ -33,11 +35,11 @@ public : // définition les fonctions membres de la classe
 	void setType(int);
 //	void setPosition(){};
 	Particle* getNext();	void setNext(Particle*);
-	int chooseInteractionType();
+	int selectInteractionType(double ***);
 	void countParticles();
 	double Parcours();
 	double Propagation(double);
-	void Interaction();
+	void Interaction(double ***);
 };
 
 #endif

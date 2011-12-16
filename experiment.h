@@ -4,6 +4,8 @@
 #include "source.h"
 #include "detector.h"
 #include "random.h"
+#include "interaction_data.h"
+
 #include <iostream>
 using namespace std;
 
@@ -14,6 +16,7 @@ private :
 	Detector *detector_;
 	Particle *topOfStack_;
 	gsl_rng *rng_;
+	double *** data;
 	//plus tard : initialiser l'enceinte, le collimateur et le détecteur.
 	
 public :

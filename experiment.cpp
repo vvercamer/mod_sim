@@ -5,6 +5,18 @@ Experiment::Experiment(double energy, int nDynodes): topOfStack_(0)
 	rng_ = random_init();
 	source_ = new Source(rng_, energy);	
 	detector_ = new Detector(nDynodes);
+
+	// Loading Interaction Data
+	int i,j = 0;
+	data = new double ** [2];
+	for(i = 0; i < 2; i++) {
+	    data[i] = new double * [nColumns];
+	    for(j = 0; j < nColumns; j++)
+			data[i][j] = new double [nLines];
+	}
+	
+	initData(data);
+
 }
 
 Experiment::~Experiment()
@@ -12,6 +24,19 @@ Experiment::~Experiment()
 	Particle * particle;
 	while( (particle = topOfStack_) != 0) {		topOfStack_ = particle->getNext();		delete particle;
 	};
+	
+	// Deleting Interaction Data
+	int i,j = 0;
+	for(i = 0; i < 2; i++) {
+	    for(j = 0; j < nColumns; j++) {
+	    	delete [] data[i][j];
+			data[i][j] = 0;
+		}
+		delete [] data[i];
+		data[i] = 0;
+	}
+	delete [] data;
+	data = 0;
 }
 
 //void Experiment::StartOfRun(int argc, char * argv[])
@@ -47,7 +72,7 @@ void Experiment::event()
 		}
 		lambda = 1/mu;
 		current->Propagation(lambda);
-		current->Interaction();
+		current->Interaction(data);
 //		cerr << "-- DEBUG -- distance de propagation : " << current->Propagation(lambda) << endl;
 		delete current;
 	}

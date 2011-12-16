@@ -12,6 +12,7 @@ using namespace std;
 #include "random.h"
 #include "file_maker.h"
 #include "experiment.h"
+
 //#include "gnuplot.h"
 
 int main(int argc, char *argv[])
