@@ -5,7 +5,6 @@
 #include <iostream>
 using namespace std;
 
-//#include "probabilities.h"
 #include "random.h"
 #include "interaction_data.h"
 
@@ -19,6 +18,15 @@ using namespace std;
 #define IODINE 3
 #define SODIUM 4
 
+typedef struct
+{
+	int nParticlesCreated;
+	void ** particlesCreated;
+	double depositedEnergy;
+} interactionResult;
+
+
+
 class Particle {
 private : // définition les données membres de la classe
 	static int n_particles_;
@@ -29,7 +37,7 @@ private : // définition les données membres de la classe
 	Particle *next_;
 	
 public : // définition les fonctions membres de la classe
-	Particle(gsl_rng *, int, Particle *);
+	Particle(gsl_rng *, int, double);
 	~Particle();
 	int getType();
 	void setType(int);
@@ -39,7 +47,8 @@ public : // définition les fonctions membres de la classe
 	void countParticles();
 	double Parcours();
 	double Propagation(double);
-	void Interaction(double ***);
+	interactionResult Interaction(double ***);
+	double getEnergy(){return energy_;};
 };
 
 #endif

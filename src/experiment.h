@@ -20,7 +20,7 @@ private :
 	//plus tard : initialiser l'enceinte, le collimateur et le détecteur.
 	
 public :
-	Experiment(double energy, int nDynodes);
+	Experiment(double energy);
 	~Experiment();
 //	void StartOfRun(int, char **);
 //	void EndOfRun();

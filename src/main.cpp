@@ -20,19 +20,26 @@ int main(int argc, char *argv[])
 	cerr << "\n****************************************" << endl
 		   << "********  START THE SIMULATION  ********" << endl
 		   << "****************************************\n" << endl;
-	
-	int nDynodes = 5;
-	
-	int nEvents = 100;
-	if (argc == 2)
+
+	int i;	
+
+	int nEvents = 1;
+	double sourceEnergy = 49.5; //en keV
+	if (argc == 3) {
 		nEvents = atoi(argv[1]);
-	
+		sourceEnergy = atof(argv[2]); //en keV
+	}
+	else if (argc != 3 && argc != 1) {
+		cerr << "-- ERROR -- Proper use is ./simulation OR ./simulation <nEvents> <sourceEnergy (keV)> " << endl;
+		exit(EXIT_FAILURE);
+	}
 
 	cerr << "-- INFO -- New experiment" << endl;		
-	Experiment* experiment = new Experiment(49500,nDynodes); //energie 49,5 keV pour le thorium
+	Experiment* experiment = new Experiment(sourceEnergy); //energie 49,5 keV pour le thorium
 
-	experiment->event();
-	experiment->event();
+	for (i=0; i<nEvents; i++){
+		experiment->event();
+	}
 	
 	cerr << "-- INFO -- The END" << endl;
 

@@ -1,10 +1,10 @@
 #include "experiment.h"
 
-Experiment::Experiment(double energy, int nDynodes): topOfStack_(0)
+Experiment::Experiment(double energy): topOfStack_(0)
 {
 	rng_ = random_init();
 	source_ = new Source(rng_, energy);	
-	detector_ = new Detector(nDynodes);
+	detector_ = new Detector();
 
 	// Loading Interaction Data
 	int i,j = 0;
@@ -75,6 +75,10 @@ void Experiment::event()
 		lambda = 1/mu;
 		current->Propagation(lambda);
 		current->Interaction(data);
+	//	cerr << "number of photons : " << detector->scintillation(electronEnergy) << endl;
+	//	cerr << "collected charges : " << detector->photomultiplication(detector->scintillation(electronEnergy)) << endl;
+		
+		
 //		cerr << "-- DEBUG -- distance de propagation : " << current->Propagation(lambda) << endl;
 		delete current;
 	}
