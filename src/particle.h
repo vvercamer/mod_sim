@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-#include "probabilities.h"
+//#include "probabilities.h"
 #include "random.h"
 #include "interaction_data.h"
 

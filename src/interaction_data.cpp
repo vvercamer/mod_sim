@@ -9,13 +9,13 @@ using namespace std;
 
 int initData(double *** data)
 {
-  if(loadData(data[0],"lib/Na_data.csv") == 0)
+  if(loadData(data[0],"data/Na_data.csv") == 0)
     cerr << "--- Sodium Data Loading : SUCCESS" << endl;
   else
     {cerr << "--- Sodium Data Loading : ERROR" << endl;
       return -1;}
   
-  if(loadData(data[1],"lib/I_data.csv") == 0)
+  if(loadData(data[1],"data/I_data.csv") == 0)
     cerr << "--- Iodine Data Loading : SUCCESS" << endl;
   else
     {cerr << "--- Iodine Data Loading : ERROR" << endl;

@@ -56,6 +56,9 @@ void Experiment::event()
 	add2Stack(source_->emitParticle());
 	add2Stack(source_->emitParticle());
 	add2Stack(source_->emitParticle());
+	add2Stack(source_->emitParticle());
+	add2Stack(source_->emitParticle());
+	add2Stack(source_->emitParticle());
 
 	while (topOfStack_ != 0){
 		Particle* current = topOfStack_;
