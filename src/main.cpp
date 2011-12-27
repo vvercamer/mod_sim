@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 	cerr << "-- INFO -- New experiment" << endl;		
 	Experiment* experiment = new Experiment(49500,nDynodes); //energie 49,5 keV pour le thorium
 
-	cerr << "-- INFO -- New event" << endl;	
+	experiment->event();
 	experiment->event();
 	
 	cerr << "-- INFO -- The END" << endl;

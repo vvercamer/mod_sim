@@ -25,6 +25,9 @@ Experiment::~Experiment()
 	while( (particle = topOfStack_) != 0) {		topOfStack_ = particle->getNext();		delete particle;
 	};
 	
+	delete detector_;
+	delete source_;
+	
 	// Deleting Interaction Data
 	int i,j = 0;
 	for(i = 0; i < 2; i++) {
@@ -51,13 +54,9 @@ Experiment::~Experiment()
 
 void Experiment::event()
 {
+	cerr << "-- INFO -- New event" << endl;	
 	double lambda = 1; // en m
 	double mu = 1;
-	add2Stack(source_->emitParticle());
-	add2Stack(source_->emitParticle());
-	add2Stack(source_->emitParticle());
-	add2Stack(source_->emitParticle());
-	add2Stack(source_->emitParticle());
 	add2Stack(source_->emitParticle());
 
 	while (topOfStack_ != 0){

@@ -11,10 +11,6 @@ BIN=bin
 ROOTFLAGS = $(ROOT_INCLUDE) $(ROOT_LIB)
 ROOT_INCLUDE = -I $(ROOTSYS)/include 
 ROOT_LIB = $(shell root-config --libs)
-#ROOT_LIB = -L $(ROOTSYS)/lib -lCore -lCint \
-#         -lGraf -lGraf3d -lHist -lHtml -lMatrix -lMinuit \
-#         -lPostscript -lProof -lTree \
-#         -lGpad -lGui -lGX11 -lRint 
 
 CC = g++
 CFLAGS = -Wall -Werror -O2 -Wshadow

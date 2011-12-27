@@ -57,12 +57,12 @@ int Particle::selectInteractionType(double*** data)
 		exit(EXIT_FAILURE);
 	}
 		
-	cNa = Na_A*data[0][1][idxData]/(Na_A+I_A)/dataNorm;
-	peNa = Na_A*data[0][2][idxData]/(Na_A+I_A)/dataNorm;
-	ppNa = Na_A*data[0][3][idxData]/(Na_A+I_A)/dataNorm;
-	cI = I_A*data[1][1][idxData]/(Na_A+I_A)/dataNorm;
-	peI = I_A*data[1][2][idxData]/(Na_A+I_A)/dataNorm;
-	ppI = I_A*data[1][3][idxData]/(Na_A+I_A)/dataNorm;
+	cNa = Na_A*data[0][1][idxData]/(Na_A+I_A);
+	peNa = Na_A*data[0][2][idxData]/(Na_A+I_A);
+	ppNa = Na_A*data[0][3][idxData]/(Na_A+I_A);
+	cI = I_A*data[1][1][idxData]/(Na_A+I_A);
+	peI = I_A*data[1][2][idxData]/(Na_A+I_A);
+	ppI = I_A*data[1][3][idxData]/(Na_A+I_A);
 	
 /*	cerr << "dataNorm : " << dataNorm <<endl;
 	cerr << "sum p : " << (peNa+cNa+ppNa+cI+peI+ppI) <<endl;
@@ -74,7 +74,7 @@ int Particle::selectInteractionType(double*** data)
 	cerr << "peI : " << peI <<endl;
 	cerr << "ppI : " << ppI <<endl;*/
 	cerr<<"NRJ "<<energy_<<endl;
-	double x = uniform_law();
+	double x = uniform_law()*dataNorm;
 	
 	cerr<<"x= "<<x<<endl;
 		
@@ -93,7 +93,7 @@ int Particle::selectInteractionType(double*** data)
 		else if (x>(cNa+peNa+ppNa+cI) && x<=(peNa+cNa+ppNa+cI+peI)) {
 			interactionType=4;//Photoelectric Na
 		}
-		else if (x>(cNa+peNa+ppNa+cI+peI) && x<=1) {
+		else if (x>(cNa+peNa+ppNa+cI+peI) && x<=dataNorm) {
 			interactionType=5;//Pair Production Na
 		}
 	//energy_
