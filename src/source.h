@@ -9,9 +9,10 @@ class Source {
 private :
 	gsl_rng* rng_;
 	double energy_;
+	double sourceSigma_;
 	
 public :
-	Source(gsl_rng*, double energy);
+	Source(gsl_rng*, double energy, double sourceSigma);
 	~Source();
 //	double getEnergy(void){return(energy);};
 //	void setEnergy(double a){energy=a;};

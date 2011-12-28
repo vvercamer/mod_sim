@@ -23,26 +23,49 @@ double uniform_law()
 	return x;
 }
 
-double arbitrary_law()
+double arbitrary_law(double (*distribution)(double x), double lower_dist, double upper_dist, double max_distrib)
 {
-	double a=0;
-	double b=1;
-	double M=1;
 	double u=0;
 	double v=0;
+
+	if( (upper_dist-lower_dist) <= 0 ){
+		cerr << "-- ERROR -- Attempted to use a wrong distribution in arbitrary_law (min/max)!" << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	if( max_distrib <= 0 ){
+		cerr << "-- ERROR -- Attempted to use a wrong distribution in arbitrary_law (max_distrib) !" << endl;
+		exit(EXIT_FAILURE);
+	}
 	
 	do {
 		u=uniform_law();
-		v=(b-a)*uniform_law();
-	}while ( u > arbitrary_function(v) / M );
+		v=(upper_dist-lower_dist)*uniform_law();
+	}while ( u > (*distribution)(v) / max_distrib );
 	return v;
 }
 
-double arbitrary_function(double x)
+double parametric_arbitrary_law(double (*distribution)(double x, double p), double parameter, double lower_dist, double upper_dist, double max_distrib)
 {
-	return x*x;
-}
+	double u=0;
+	double v=0;
 
+	if( (upper_dist-lower_dist) <= 0 ){
+		cerr << "-- ERROR -- Attempted to use a wrong distribution in arbitrary_law (min/max)!" << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	if( max_distrib <= 0 ){
+		cerr << "-- ERROR -- Attempted to use a wrong distribution in arbitrary_law (max_distrib) !" << endl;
+		exit(EXIT_FAILURE);
+	}
+	
+	do {
+		u=uniform_law();
+		v=(upper_dist-lower_dist)*uniform_law();
+	}while ( u > distribution(v,parameter) / max_distrib );
+	return v;
+}
 
 //double gaussian_law	
 

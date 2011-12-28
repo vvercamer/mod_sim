@@ -1,9 +1,9 @@
 #include "experiment.h"
 
-Experiment::Experiment(double energy): topOfStack_(0)
+Experiment::Experiment(double energy, double sourceSigma): topOfStack_(0)
 {
 	rng_ = random_init();
-	source_ = new Source(rng_, energy);	
+	source_ = new Source(rng_, energy, sourceSigma);	
 	detector_ = new Detector();
 
 	// Loading Interaction Data
@@ -86,7 +86,7 @@ void Experiment::event()
 		current = 0;
 		
 	}
-	cout << "collected charges : " << detector_->photomultiplication(detector_->scintillation(scintillationEnergy)) << endl;
+	cerr << "collected charges : " << detector_->photomultiplication(detector_->scintillation(scintillationEnergy)) << endl;
 }
 
 Particle * Experiment::getTopOfStack()

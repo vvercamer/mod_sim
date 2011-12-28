@@ -11,8 +11,8 @@ extern gsl_rng* random_init(void);
 
 double uniform_law(void);
 
-double arbitrary_law();
+double arbitrary_law(double (*distribution)(double x), double lower_dist, double upper_dist, double max_distrib);
 
-double arbitrary_function(double x);
+double parametric_arbitrary_law(double (*distribution)(double x, double p), double p, double lower_dist, double upper_dist, double max_distrib);
 
 #endif

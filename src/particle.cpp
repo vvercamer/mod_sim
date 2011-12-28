@@ -10,6 +10,8 @@ Particle::~Particle()
 	n_particles_--;
 }
 
+// private functions
+
 void Particle::countParticles()
 {
 	if (n_particles_ < 2){
@@ -93,8 +95,9 @@ int Particle::selectInteractionType(double*** data)
 		return interactionType;
 }
 
-double Particle::Parcours(){
-	return 0;
+double compton_distrib(double x,double ksi){
+//	double r=2.81794092e-15;pow(r,2)*
+	return 1/pow(1+ksi*(1-cos(x)),2)*(1+pow(cos(x),2)+pow(ksi*(1-cos(x)),2)/(1+ksi*(1-cos(x))))/2;
 }
 
 double Particle::I_Photoelectric()
@@ -116,13 +119,19 @@ double Particle::I_Photoelectric()
 	return electronEnergy;
 }
 
-interactionResult Particle::I_Compton()
+interactionResult Particle::Compton()
 {
 	double comptonEnergy=0;
 	double thetaCompton=0;
+	double ksi=energy_/511; // 511keV electron energy
+	thetaCompton=parametric_arbitrary_law(compton_distrib,ksi,0,M_PI,1);
+
+	comptonEnergy = energy_/(1+ksi*(1-cos(thetaCompton))); 
 	
-	//EX'= EX / (1+(EX/mc2)(1-cosθ))
-	comptonEnergy = energy_/(1+energy_/511*(1-cos(thetaCompton)))
+	
+	cerr<< "-- DEBUG -- ThetaCompton : " << thetaCompton << endl;
+	cout<< thetaCompton << endl;
+	
 	interactionResult result;
 	result.nParticlesCreated = 1;
 	result.depositedEnergy = energy_ - comptonEnergy;
@@ -131,6 +140,8 @@ interactionResult Particle::I_Compton()
 	
 	return result;
 }
+
+// public functions
 
 double Particle::Propagation(double lambda){
 	double L=0;
@@ -155,7 +166,7 @@ interactionResult Particle::Interaction(double*** data)
 		case 2:			cerr << "-- DEBUG -- Na Pair production"<< endl;	
 			break;
 		case 3:			cerr << "-- DEBUG -- I Compton scattering"<< endl;
-			result=I_Compton();			break;
+			result=Compton();			break;
 		case 4:
 		{
 			cerr << "-- DEBUG -- I Photoelectric effect"<< endl;
@@ -168,12 +179,12 @@ interactionResult Particle::Interaction(double*** data)
 			if(random < I_Auger)
 			{
 			// AUGER
-			cout << "Auger" << endl;
+			cerr << "Auger" << endl;
 			}
 			else
 			{
 			// FLUO
-			cout << "Fluo" << endl;
+			cerr << "Fluo" << endl;
 			}
 		
 			break;

@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
 
 	int nEvents = 1;
 	double sourceEnergy = 49.5; //en keV
+	double sourceSigma = 2;
 	if (argc == 3) {
 		nEvents = atoi(argv[1]);
 		sourceEnergy = atof(argv[2]); //en keV
@@ -35,7 +36,7 @@ int main(int argc, char *argv[])
 	}
 
 	cerr << "-- INFO -- New experiment" << endl;		
-	Experiment* experiment = new Experiment(sourceEnergy); //energie 49,5 keV pour le thorium
+	Experiment* experiment = new Experiment(sourceEnergy, sourceSigma); //energie 49,5 keV pour le thorium
 
 	for (i=0; i<nEvents; i++){
 		experiment->event();
