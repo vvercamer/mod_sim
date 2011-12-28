@@ -39,7 +39,10 @@ public : // définition les fonctions membres de la classe
 	double Parcours();
 	double Propagation(double);
 	interactionResult Interaction(double ***);
+	double I_Photoelectric();
+	interactionResult I_Compton();
 	double getEnergy(){return energy_;};
+	
 };
 
 #endif

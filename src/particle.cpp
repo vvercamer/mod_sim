@@ -97,6 +97,41 @@ double Particle::Parcours(){
 	return 0;
 }
 
+double Particle::I_Photoelectric()
+{
+	// Determination of the energy of the photoelectron
+	int i=0;
+	double random;
+	double electronEnergy = 0;
+	while(electronEnergy == 0)
+	{
+		random = uniform_law();
+		if (I_Shells[i] == 0)
+			electronEnergy = energy_;
+		else if (energy_ > I_Shells[i] && random < 0.9)
+			electronEnergy = energy_ - I_Shells[i];
+			
+		i++;
+	}
+	return electronEnergy;
+}
+
+interactionResult Particle::I_Compton()
+{
+	double comptonEnergy=0;
+	double thetaCompton=0;
+	
+	//EX'= EX / (1+(EX/mc2)(1-cosθ))
+	comptonEnergy = energy_/(1+energy_/511*(1-cos(thetaCompton)))
+	interactionResult result;
+	result.nParticlesCreated = 1;
+	result.depositedEnergy = energy_ - comptonEnergy;
+	result.particlesCreated = new void * [result.nParticlesCreated];
+	result.particlesCreated[0] = new Particle(rng_,comptonEnergy);
+	
+	return result;
+}
+
 double Particle::Propagation(double lambda){
 	double L=0;
 	L=gsl_ran_exponential(rng_, lambda);
@@ -107,6 +142,11 @@ interactionResult Particle::Interaction(double*** data)
 {
 	
 	interactionResult result;
+	
+	result.nParticlesCreated = 0;
+	result.particlesCreated = 0;
+	result.depositedEnergy = 0 ;
+	
 	int interactionType = selectInteractionType(data);
 	switch (interactionType)	{		case 0:			cerr << "-- DEBUG -- Na Compton scattering"<< endl;			break;
 		case 1:
@@ -114,31 +154,16 @@ interactionResult Particle::Interaction(double*** data)
 			break;
 		case 2:			cerr << "-- DEBUG -- Na Pair production"<< endl;	
 			break;
-		case 3:			cerr << "-- DEBUG -- I Compton scattering"<< endl;			break;
+		case 3:			cerr << "-- DEBUG -- I Compton scattering"<< endl;
+			result=I_Compton();			break;
 		case 4:
 		{
 			cerr << "-- DEBUG -- I Photoelectric effect"<< endl;
-			
-			// Determination of the energy of the photoelectron
-			int i=0;
-			double random;
-			double electronEnergy = 0;
-			while(electronEnergy == 0)
-			{
-				random = uniform_law();
-				if (I_Shells[i] == 0)
-					electronEnergy = energy_;
-				else if (energy_ > I_Shells[i] && random < 0.9)
-					electronEnergy = energy_ - I_Shells[i];
-					
-				i++;
-			}
-		   
-			cout << "Deposited energy : " << electronEnergy << endl;
+			result.depositedEnergy=I_Photoelectric();
 			
 			// Auger / Fluo
 			
-			random = uniform_law();
+			double random = uniform_law();
 			
 			if(random < I_Auger)
 			{
@@ -162,10 +187,8 @@ interactionResult Particle::Interaction(double*** data)
 			
 	}
 	
-	result.nParticlesCreated = 1;
-	result.depositedEnergy = 35.97;
-	result.particlesCreated = new void * [result.nParticlesCreated];
-	result.particlesCreated[0] = new Particle(rng_,25);
+//	result.particlesCreated = new void * [result.nParticlesCreated];
+//	result.particlesCreated[0] = new Particle(rng_,25);
 	return result;
 }
 

@@ -57,6 +57,7 @@ void Experiment::event()
 	cerr << "-- INFO -- New event" << endl;	
 	double lambda = 1; // en m
 	double mu = 1;
+	double scintillationEnergy = 0;
 	add2Stack(source_->emitParticle());
 
 	while (topOfStack_ != 0){
@@ -74,14 +75,18 @@ void Experiment::event()
 		}
 		lambda = 1/mu;
 		current->Propagation(lambda);
-		current->Interaction(data);
+		interactionResult result = current->Interaction(data);
 	//	cerr << "number of photons : " << detector->scintillation(electronEnergy) << endl;
-	//	cerr << "collected charges : " << detector->photomultiplication(detector->scintillation(electronEnergy)) << endl;
+	//	cerr << "Deposited energy : " << result.depositedEnergy << endl;
+	//	cout << "collected charges : " << detector_->photomultiplication(detector_->scintillation(result.depositedEnergy)) << endl;
 		
-		
+		scintillationEnergy += result.depositedEnergy;
 //		cerr << "-- DEBUG -- distance de propagation : " << current->Propagation(lambda) << endl;
 		delete current;
+		current = 0;
+		
 	}
+	cout << "collected charges : " << detector_->photomultiplication(detector_->scintillation(scintillationEnergy)) << endl;
 }
 
 Particle * Experiment::getTopOfStack()
