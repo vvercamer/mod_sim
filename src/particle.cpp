@@ -1,6 +1,6 @@
 #include "particle.h"
 
-Particle::Particle(gsl_rng * rng, int type, double energy): rng_(rng), type_(type), energy_(energy)
+Particle::Particle(gsl_rng * rng, double energy): rng_(rng), energy_(energy)
 {
 	n_particles_++;
 }
@@ -19,16 +19,6 @@ void Particle::countParticles()
 	{
 		cerr << "-- INFO -- il y a " << n_particles_ << " particules en mémoire"<< endl;
 	}
-}
-
-int Particle::getType()
-{
-	return type_;
-}
-
-void Particle::setType(int type)
-{
-	type_ = type;
 }
 
 Particle * Particle::getNext()
@@ -175,7 +165,7 @@ interactionResult Particle::Interaction(double*** data)
 	result.nParticlesCreated = 1;
 	result.depositedEnergy = 35.97;
 	result.particlesCreated = new void * [result.nParticlesCreated];
-	result.particlesCreated[0] = new Particle(rng_,0,25);
+	result.particlesCreated[0] = new Particle(rng_,25);
 	return result;
 }
 
