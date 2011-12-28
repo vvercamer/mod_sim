@@ -11,15 +11,19 @@ int initData(double *** data)
 {
   if(loadData(data[0],"data/Na_data.csv") == 0)
     cerr << "--- Sodium Data Loading : SUCCESS" << endl;
-  else
-    {cerr << "--- Sodium Data Loading : ERROR" << endl;
-      return -1;}
+	else{
+		cerr << "--ERROR-- Sodium Data Loading : ERROR" << endl;
+		exit(EXIT_FAILURE);
+		return -1;
+	}
   
-  if(loadData(data[1],"data/I_data.csv") == 0)
-    cerr << "--- Iodine Data Loading : SUCCESS" << endl;
-  else
-    {cerr << "--- Iodine Data Loading : ERROR" << endl;
-      return -1;}
+	if(loadData(data[1],"data/I_data.csv") == 0)
+		cerr << "--- Iodine Data Loading : SUCCESS" << endl;
+	else{
+		cerr << "--ERROR-- Iodine Data Loading : ERROR" << endl;
+    	exit(EXIT_FAILURE);	
+    	return -1;
+    }
   
   return 0;
 }

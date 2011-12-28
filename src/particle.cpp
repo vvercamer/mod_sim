@@ -100,26 +100,67 @@ double compton_distrib(double x,double ksi){
 	return 1/pow(1+ksi*(1-cos(x)),2)*(1+pow(cos(x),2)+pow(ksi*(1-cos(x)),2)/(1+ksi*(1-cos(x))))/2;
 }
 
-double Particle::I_Photoelectric()
+void Particle::PhotoElectric(int atom, interactionResult * result)
 {
+	const double * Shells = 0;
+  
+	if (atom == 0){
+		Shells = Na_Shells;
+	}
+	else if (atom == 1){
+		Shells = I_Shells;
+	}
+		
 	// Determination of the energy of the photoelectron
-	int i=0;
+	int i=-1;
 	double random;
 	double electronEnergy = 0;
-	while(electronEnergy == 0)
-	{
-		random = uniform_law();
-		if (I_Shells[i] == 0)
-			electronEnergy = energy_;
-		else if (energy_ > I_Shells[i] && random < 0.9)
-			electronEnergy = energy_ - I_Shells[i];
-			
+	while(electronEnergy == 0){
 		i++;
+		random = uniform_law();
+      
+		if (Shells[i] == 0)
+			electronEnergy = energy_;
+		else if (energy_ > Shells[i] && random < 0.9)
+			electronEnergy = energy_ - Shells[i];
+    }
+
+	result->depositedEnergy = electronEnergy;
+
+	// Auger / Fluo
+	random = uniform_law();
+  
+	if(random < I_Auger){
+		// AUGER
+		cerr << "-- DEBUG -- Auger" << endl;
+    }
+  
+	else{
+		// FLUO
+      cerr << "-- DEBUG -- Fluo " << endl;
+      
+      // K alpha
+	if ( i == 0 ){
+		cerr << " (K alpha) " << endl;
+		random = uniform_law();
+		double hnuFluo;
+		if (random <= 0.5)
+			hnuFluo = I_Shells[0] - I_Shells[2]; // K alpha 1
+		else
+			hnuFluo = I_Shells[0] - I_Shells[3]; // K alpha 2
+		
+		result->nParticlesCreated = 1;
+		result->particlesCreated = new void * [result->nParticlesCreated];
+		result->particlesCreated[0] = new Particle(rng_,hnuFluo);
 	}
-	return electronEnergy;
+      
+      // not K
+	else
+		cerr << endl << "Ignoring fluorescence process (layer with a vacancy =/= K)" << endl;
+	}
 }
 
-interactionResult Particle::Compton()
+void Particle::Compton(interactionResult* result)
 {
 	double comptonEnergy=0;
 	double thetaCompton=0;
@@ -128,17 +169,13 @@ interactionResult Particle::Compton()
 
 	comptonEnergy = energy_/(1+ksi*(1-cos(thetaCompton))); 
 	
+	cerr<< "-- DEBUG -- intialEnergy : " << this->energy_ << endl;
+	cerr<< "-- DEBUG -- comptonEnergy : " << comptonEnergy << endl;
 	
-	cerr<< "-- DEBUG -- ThetaCompton : " << thetaCompton << endl;
-	cout<< thetaCompton << endl;
-	
-	interactionResult result;
-	result.nParticlesCreated = 1;
-	result.depositedEnergy = energy_ - comptonEnergy;
-	result.particlesCreated = new void * [result.nParticlesCreated];
-	result.particlesCreated[0] = new Particle(rng_,comptonEnergy);
-	
-	return result;
+	result->nParticlesCreated = 1;
+	result->depositedEnergy = energy_ - comptonEnergy;
+	result->particlesCreated = new void * [result->nParticlesCreated];
+	result->particlesCreated[0] = new Particle(rng_,comptonEnergy);
 }
 
 // public functions
@@ -166,27 +203,11 @@ interactionResult Particle::Interaction(double*** data)
 		case 2:			cerr << "-- DEBUG -- Na Pair production"<< endl;	
 			break;
 		case 3:			cerr << "-- DEBUG -- I Compton scattering"<< endl;
-			result=Compton();			break;
+			Compton(&result);			break;
 		case 4:
 		{
 			cerr << "-- DEBUG -- I Photoelectric effect"<< endl;
-			result.depositedEnergy=I_Photoelectric();
-			
-			// Auger / Fluo
-			
-			double random = uniform_law();
-			
-			if(random < I_Auger)
-			{
-			// AUGER
-			cerr << "Auger" << endl;
-			}
-			else
-			{
-			// FLUO
-			cerr << "Fluo" << endl;
-			}
-		
+			PhotoElectric(1, &result);
 			break;
 		}
 		case 5:			cerr << "-- DEBUG -- I Pair production"<< endl;	

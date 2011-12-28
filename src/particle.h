@@ -28,7 +28,11 @@ private : // définition les données membres de la classe
 	double theta_, phi_, energy_;
 	double position_[3];
 	Particle *next_;
-	int selectInteractionType(double ***);
+	
+	//private functions
+	int selectInteractionType(double *** data);
+	void PhotoElectric(int atom, interactionResult* result);
+	void Compton(interactionResult* result);
 	
 public : // définition les fonctions membres de la classe
 	Particle(gsl_rng *, double);
@@ -38,8 +42,6 @@ public : // définition les fonctions membres de la classe
 	void countParticles();
 	double Propagation(double);
 	interactionResult Interaction(double ***);
-	double I_Photoelectric();
-	interactionResult Compton();
 	double getEnergy(){return energy_;};
 	
 };

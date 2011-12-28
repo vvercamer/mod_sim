@@ -54,11 +54,11 @@ Experiment::~Experiment()
 
 void Experiment::event()
 {
-	cerr << "-- INFO -- New event" << endl;	
+	cerr << "\n-- INFO -- New event" << endl;	
 	double lambda = 1; // en m
 	double mu = 1;
 	double scintillationEnergy = 0;
-	add2Stack(source_->emitParticle());
+	add2stack(source_->emitParticle());
 
 	while (topOfStack_ != 0){
 		Particle* current = topOfStack_;
@@ -75,17 +75,21 @@ void Experiment::event()
 		}
 		lambda = 1/mu;
 		current->Propagation(lambda);
+	//	cerr << "-- DEBUG -- distance de propagation : " << current->Propagation(lambda) << endl;
+	
 		interactionResult result = current->Interaction(data);
-	//	cerr << "number of photons : " << detector->scintillation(electronEnergy) << endl;
-	//	cerr << "Deposited energy : " << result.depositedEnergy << endl;
-	//	cout << "collected charges : " << detector_->photomultiplication(detector_->scintillation(result.depositedEnergy)) << endl;
-		
 		scintillationEnergy += result.depositedEnergy;
-//		cerr << "-- DEBUG -- distance de propagation : " << current->Propagation(lambda) << endl;
+
 		delete current;
 		current = 0;
 		
+		// Adding to the stack the particles resulting from previous interaction
+		for (int i=0; i < result.nParticlesCreated; i++)
+			add2stack((Particle*)result.particlesCreated[i]);
+
 	}
+	cerr << "--DEBUG-- Deposited energy : " << scintillationEnergy << endl;
+	cout << scintillationEnergy << endl;
 	cerr << "collected charges : " << detector_->photomultiplication(detector_->scintillation(scintillationEnergy)) << endl;
 }
 
@@ -105,7 +109,7 @@ void Experiment::showStack()
 	if(topOfStack_ != 0) {
 		Particle* current = topOfStack_;
 		do{
-				cout << current << endl;
+				cerr << current << endl;
 				current=current->getNext();
 				i++;
 		}while(current != 0);
@@ -117,7 +121,7 @@ void Experiment::showStack()
 	cerr << "-- INFO -- there are "<< i << " particles in the stack" << endl;
 }
 
-void Experiment::add2Stack(Particle * particle)
+void Experiment::add2stack(Particle * particle)
 {
 	particle -> setNext(topOfStack_);
 	topOfStack_ = particle;
