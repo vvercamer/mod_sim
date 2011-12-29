@@ -10,6 +10,7 @@ private :
 	gsl_rng* rng_;
 	double energy_;
 	double sourceSigma_;
+	double sourcePosition_[3];
 	
 public :
 	Source(gsl_rng*, double energy, double sourceSigma);

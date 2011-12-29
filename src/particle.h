@@ -25,7 +25,7 @@ class Particle {
 private : // définition les données membres de la classe
 	static int n_particles_;
 	gsl_rng * rng_;
-	double theta_, phi_, energy_;
+	double energy_, theta_, phi_;
 	double position_[3];
 	Particle *next_;
 	
@@ -33,15 +33,17 @@ private : // définition les données membres de la classe
 	int selectInteractionType(double *** data);
 	void PhotoElectric(int atom, interactionResult* result);
 	void Compton(interactionResult* result);
+	void PairProduction(interactionResult* result);
 	
 public : // définition les fonctions membres de la classe
-	Particle(gsl_rng *, double);
+//	Particle(gsl_rng * rng, double energy);
+	Particle(gsl_rng * rng, double energy, double theta, double phi, double position[3]);
 	~Particle();
 //	void setPosition(){};
-	Particle* getNext();	void setNext(Particle*);
+	Particle* getNext();	void setNext(Particle* next);
 	void countParticles();
-	double Propagation(double);
-	interactionResult Interaction(double ***);
+	double Propagation(double lambda);
+	interactionResult Interaction(double *** data);
 	double getEnergy(){return energy_;};
 	
 };
