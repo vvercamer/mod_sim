@@ -52,7 +52,7 @@ Experiment::~Experiment()
 //
 //}
 
-void Experiment::event()
+double Experiment::event()
 {
 	cerr << "\n-- INFO -- New event" << endl;	
 	double lambda = 1; // en m
@@ -91,6 +91,8 @@ void Experiment::event()
 	cerr << "--DEBUG-- Deposited energy : " << scintillationEnergy << endl;
 	cout << scintillationEnergy << endl;
 	cerr << "collected charges : " << detector_->photomultiplication(detector_->scintillation(scintillationEnergy)) << endl;
+	
+	return scintillationEnergy;
 }
 
 Particle * Experiment::getTopOfStack()

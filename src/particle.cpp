@@ -196,9 +196,11 @@ interactionResult Particle::Interaction(double*** data)
 	result.depositedEnergy = 0 ;
 	
 	int interactionType = selectInteractionType(data);
-	switch (interactionType)	{		case 0:			cerr << "-- DEBUG -- Na Compton scattering"<< endl;			break;
+	switch (interactionType)	{		case 0:			cerr << "-- DEBUG -- Na Compton scattering"<< endl;
+			Compton(&result);			break;
 		case 1:
 			cerr << "-- DEBUG -- Na Photoelectric effect"<< endl;
+			PhotoElectric(0, &result);
 			break;
 		case 2:			cerr << "-- DEBUG -- Na Pair production"<< endl;	
 			break;

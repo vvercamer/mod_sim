@@ -10,6 +10,7 @@ using namespace std;
 #include <gsl/gsl_histogram.h>
 
 #include "random.h"
+#include "histo_maker.h"
 #include "file_maker.h"
 #include "experiment.h"
 
@@ -35,12 +36,17 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
+	double *scintillationEnergy = new double [nEvents];
+
+
 	cerr << "-- INFO -- New experiment" << endl;		
 	Experiment* experiment = new Experiment(sourceEnergy, sourceSigma); //energie 49,5 keV pour le thorium
 
 	for (i=0; i<nEvents; i++){
-		experiment->event();
+		scintillationEnergy[i]=experiment->event();
 	}
+	
+	histo_maker(nEvents,scintillationEnergy,sourceEnergy*1.1);
 	
 	cerr << "-- INFO -- The END" << endl;
 

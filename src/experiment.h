@@ -24,7 +24,7 @@ public :
 	~Experiment();
 //	void StartOfRun(int, char **);
 //	void EndOfRun();
-	void event();
+	double event();
 	Particle* getTopOfStack();
 	void setTopOfStack(Particle*);
 	void showStack();

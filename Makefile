@@ -1,4 +1,4 @@
-SIM_OBJ_ = main.o random.o file_maker.o particle.o source.o experiment.o detector.o collimator.o enclosure.o interaction_data.o
+SIM_OBJ_ = main.o random.o file_maker.o histo_maker.o particle.o source.o experiment.o detector.o collimator.o enclosure.o interaction_data.o
 SIM_BIN_=simulation
 
 POSTPROCESS_OBJ_ = postprocessing.o
@@ -6,7 +6,7 @@ POSTPROCESS_BIN_=postprocessing
 
 SRC=src
 LIB=lib
-BIN=bin
+BIN=.
 
 ROOTFLAGS = $(ROOT_INCLUDE) $(ROOT_LIB)
 ROOT_INCLUDE = -I $(ROOTSYS)/include 
