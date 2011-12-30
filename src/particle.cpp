@@ -50,7 +50,8 @@ int Particle::selectInteractionType(double*** data)
 	while (energy_ > data[0][0][idxData] && idxData < (nLines-1)) {
 		idxData++;
 	}
-	dataNorm = (Na_A*(data[0][1][idxData]+data[0][2][idxData]+data[0][3][idxData])+I_A*(data[1][1][idxData]+data[1][2][idxData]+data[1][3][idxData]))/(Na_A+I_A);
+	dataNorm = data[0][4][idxData];
+//	dataNorm = (Na_A*(data[0][1][idxData]+data[0][2][idxData]+data[0][3][idxData])+I_A*(data[1][1][idxData]+data[1][2][idxData]+data[1][3][idxData]))/(Na_A+I_A);
 	if (dataNorm <= 0) {
 		cerr << "-- ERROR -- Problem during selectInteractionType" << endl;
 		exit(EXIT_FAILURE);
