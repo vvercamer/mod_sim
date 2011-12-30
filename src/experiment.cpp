@@ -69,28 +69,33 @@ double Experiment::event()
 		//current->countParticles();
 		
 
-		if ((mu = detector_->getDensity()) == 0){//*detector_->getCrossSection(current->getEnergy,NaI);
+		if ((mu = detector_->getDensity()) == 0) { //*detector_->getCrossSection(current->getEnergy,NaI);
 			cerr << "-- ERROR -- Attempted to divide by ZERO (mu = 1/lambda) !" << endl;
 			exit(EXIT_FAILURE);
 		}
 		lambda = 1/mu;
 		current->Propagation(lambda);
-	//	cerr << "-- DEBUG -- distance de propagation : " << current->Propagation(lambda) << endl;
-	
-		interactionResult result = current->Interaction(data);
-		scintillationEnergy += result.depositedEnergy;
-
+//		cerr << "-- DEBUG -- distance de propagation : " << current->Propagation(lambda) << endl;
+		
+		if (current->Propagation(lambda) < 0.1) {
+			interactionResult result = current->Interaction(data);
+			scintillationEnergy += result.depositedEnergy;
+		// Adding to the stack the particles resulting from previous interaction
+			for (int i=0; i < result.nParticlesCreated; i++)
+				add2stack((Particle*)result.particlesCreated[i]);
+		}
+		else {
+			cerr << "-- DEBUG -- The particle got out the experiment !" << endl;
+		}
+		
 		delete current;
 		current = 0;
 		
-		// Adding to the stack the particles resulting from previous interaction
-		for (int i=0; i < result.nParticlesCreated; i++)
-			add2stack((Particle*)result.particlesCreated[i]);
+
 
 	}
-	cerr << "--DEBUG-- Deposited energy : " << scintillationEnergy << endl;
-	cout << scintillationEnergy << endl;
-	cerr << "collected charges : " << detector_->photomultiplication(detector_->scintillation(scintillationEnergy)) << endl;
+	cerr << "-- DEBUG -- Deposited energy : " << scintillationEnergy << " keV" << endl;
+	cerr << "-- DEBUG -- Collected charges : " << detector_->photomultiplication(detector_->scintillation(scintillationEnergy)) << endl;
 	
 	return scintillationEnergy;
 }
@@ -98,10 +103,6 @@ double Experiment::event()
 Particle * Experiment::getTopOfStack()
 {
 	return topOfStack_;
-}
-
-void Experiment::setTopOfStack(Particle* topOfStack){
-	topOfStack_=topOfStack;
 }
 
 void Experiment::showStack()
@@ -123,7 +124,7 @@ void Experiment::showStack()
 	cerr << "-- INFO -- there are "<< i << " particles in the stack" << endl;
 }
 
-void Experiment::add2stack(Particle * particle)
+void Experiment::add2stack(Particle* particle)
 {
 	particle -> setNext(topOfStack_);
 	topOfStack_ = particle;

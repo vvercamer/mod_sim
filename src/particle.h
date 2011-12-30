@@ -8,7 +8,7 @@ using namespace std;
 #include "random.h"
 #include "interaction_data.h"
 
-#include <gsl/gsl_sf_log.h>			// ln
+#include <gsl/gsl_sf_log.h>	 // ln
 #include <gsl/gsl_randist.h> // loi exp
 
 

@@ -17,6 +17,11 @@ private :
 	Particle *topOfStack_;
 	gsl_rng *rng_;
 	double *** data;
+	// functions
+	Particle* getTopOfStack();
+	void showStack();
+	void add2stack(Particle* particle);
+	void removeTopOfStack();
 	//plus tard : initialiser l'enceinte, le collimateur et le détecteur.
 	
 public :
@@ -25,11 +30,6 @@ public :
 //	void StartOfRun(int, char **);
 //	void EndOfRun();
 	double event();
-	Particle* getTopOfStack();
-	void setTopOfStack(Particle*);
-	void showStack();
-	void add2stack(Particle *);
-	void removeTopOfStack();
 };
 
 #endif

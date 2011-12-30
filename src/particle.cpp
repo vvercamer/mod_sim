@@ -23,12 +23,11 @@ Particle::~Particle()
 
 void Particle::countParticles()
 {
-	if (n_particles_ < 2){
-		cerr << "-- INFO -- il y a " << n_particles_ << " particule en mémoire"<< endl;
+	if (n_particles_ < 2) {
+		cerr << "-- INFO -- il y a " << n_particles_ << " particule en mémoire" << endl;
 	}
-	else
-	{
-		cerr << "-- INFO -- il y a " << n_particles_ << " particules en mémoire"<< endl;
+	else {
+		cerr << "-- INFO -- il y a " << n_particles_ << " particules en mémoire" << endl;
 	}
 }
 
@@ -52,7 +51,7 @@ int Particle::selectInteractionType(double*** data)
 		idxData++;
 	}
 	dataNorm = (Na_A*(data[0][1][idxData]+data[0][2][idxData]+data[0][3][idxData])+I_A*(data[1][1][idxData]+data[1][2][idxData]+data[1][3][idxData]))/(Na_A+I_A);
-	if (dataNorm <= 0){
+	if (dataNorm <= 0) {
 		cerr << "-- ERROR -- Problem during selectInteractionType" << endl;
 		exit(EXIT_FAILURE);
 	}
@@ -104,7 +103,7 @@ int Particle::selectInteractionType(double*** data)
 		return interactionType;
 }
 
-double compton_distrib(double x,double ksi){
+double compton_distrib(double x,double ksi) {
 //	double r=2.81794092e-15;pow(r,2)*
 	return 1/pow(1+ksi*(1-cos(x)),2)*(1+pow(cos(x),2)+pow(ksi*(1-cos(x)),2)/(1+ksi*(1-cos(x))))/2;
 }
@@ -124,7 +123,7 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 	int i=-1;
 	double random;
 	double electronEnergy = 0;
-	while(electronEnergy == 0){
+	while (electronEnergy == 0) {
 		i++;
 		random = uniform_law();
       
@@ -139,7 +138,7 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 	// Auger / Fluo
 	random = uniform_law();
   
-	if(random < I_Auger){
+	if (random < I_Auger) {
 		// AUGER
 		cerr << "-- DEBUG -- Auger" << endl;
     }
@@ -149,7 +148,7 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
       cerr << "-- DEBUG -- Fluo " << endl;
       
       // K alpha
-	if ( i == 0 ){
+	if (i == 0) {
 		cerr << " (K alpha) " << endl;
 		random = uniform_law();
 		double hnuFluo;
@@ -173,19 +172,12 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 
 void Particle::Compton(interactionResult* result)
 {
-	double comptonEnergy=0;
-	double thetaCompton=0;
 	double ksi=energy_/511; // 511keV electron energy
-	thetaCompton=parametric_arbitrary_law(compton_distrib,ksi,0,M_PI,1);
-
-	comptonEnergy = energy_/(1+ksi*(1-cos(thetaCompton))); 
+	double thetaCompton=parametric_arbitrary_law(compton_distrib,ksi,0,M_PI,1);
+	double comptonEnergy = energy_/(1+ksi*(1-cos(thetaCompton))); 
 	
-	cerr<< "-- DEBUG -- intialEnergy : " << this->energy_ << endl;
-	cerr<< "-- DEBUG -- comptonEnergy : " << comptonEnergy << endl;
-	
-	
-	double theta=0;
-	double phi=0;
+	double theta=0; // à derminer en fonction de theta_ et phi_ matrices de rotation ? quaternions ?
+	double phi=0; // idem
 	result->nParticlesCreated = 1;
 	result->depositedEnergy = energy_ - comptonEnergy;
 	result->particlesCreated = new void * [result->nParticlesCreated];
@@ -200,12 +192,13 @@ void Particle::PairProduction(interactionResult* result)
 	result->depositedEnergy = energy_ - 1022;
 	result->particlesCreated = new void * [result->nParticlesCreated];
 	result->particlesCreated[0] = new Particle(rng_,511,theta,phi,position_);
-	result->particlesCreated[1] = new Particle(rng_,511,theta,phi,position_);
+	result->particlesCreated[1] = new Particle(rng_,511,theta+M_PI,phi,position_);
 }
 
 // public functions
 
-double Particle::Propagation(double lambda){
+double Particle::Propagation(double lambda)
+{
 	double L=0;
 	L=gsl_ran_exponential(rng_, lambda);
 	return L;
@@ -221,7 +214,7 @@ interactionResult Particle::Interaction(double*** data)
 	result.depositedEnergy = 0 ;
 	
 	int interactionType = selectInteractionType(data);
-	switch (interactionType)	{		case 0:			cerr << "-- DEBUG -- Na Compton scattering"<< endl;
+	switch (interactionType) {		case 0:			cerr << "-- DEBUG -- Na Compton scattering"<< endl;
 			Compton(&result);			break;
 		case 1:
 			cerr << "-- DEBUG -- Na Photoelectric effect"<< endl;
@@ -233,11 +226,9 @@ interactionResult Particle::Interaction(double*** data)
 		case 3:			cerr << "-- DEBUG -- I Compton scattering"<< endl;
 			Compton(&result);			break;
 		case 4:
-		{
 			cerr << "-- DEBUG -- I Photoelectric effect"<< endl;
 			PhotoElectric(1, &result);
 			break;
-		}
 		case 5:			cerr << "-- DEBUG -- I Pair production"<< endl;	
 			PairProduction(&result);
 			break;
