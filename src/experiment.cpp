@@ -1,10 +1,11 @@
 #include "experiment.h"
 
-Experiment::Experiment(double energy, double sourceSigma): topOfStack_(0)
+Experiment::Experiment(sourceParameters sParam, collimatorParameters cParam, detectorParameters dParam): topOfStack_(0)
 {
 	rng_ = random_init();
-	source_ = new Source(rng_, energy, sourceSigma);	
-	detector_ = new Detector();
+	source_ = new Source(rng_, sParam);	
+	collimator_ = new Collimator(cParam);
+	detector_ = new Detector(dParam);
 
 	// Loading Interaction Data
 	int i,j = 0;
@@ -66,7 +67,7 @@ double Experiment::event()
 		removeTopOfStack();
 		//current->countParticles();
 
-		if (current->Propagation(detector_->getDensity(),data) < 0.01) {
+		if (current->Propagation(collimator_,detector_,data) == 1) {
 			interactionResult result = current->Interaction(data);
 			scintillationEnergy += result.depositedEnergy;
 		// Adding to the stack the particles resulting from previous interaction

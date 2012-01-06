@@ -15,4 +15,6 @@ double arbitrary_law(double (*distribution)(double x), double lower_dist, double
 
 double parametric_arbitrary_law(double (*distribution)(double x, double p), double p, double lower_dist, double upper_dist, double max_distrib);
 
+double sign_rand();
+
 #endif

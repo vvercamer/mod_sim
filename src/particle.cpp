@@ -5,12 +5,11 @@ Particle::Particle(gsl_rng * rng, double energy): rng_(rng), energy_(energy)
 	n_particles_++;
 }
 */
-Particle::Particle(gsl_rng * rng, double energy, double theta, double phi, double position[3]):
-rng_(rng), energy_(energy), theta_(theta), phi_(phi)
+Particle::Particle(gsl_rng * rng, double energy, double theta, double position[2]):
+rng_(rng), energy_(energy), theta_(theta)
 {
 	position_[0]=position[0];
 	position_[1]=position[1];
-	position_[2]=position[2];
 	n_particles_++;
 }
 
@@ -143,7 +142,6 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 		// AUGER
 		cerr << "-- DEBUG -- Auger" << endl;
     }
-  
 	else{
 		// FLUO
       cerr << "-- DEBUG -- Fluo " << endl;
@@ -158,11 +156,11 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 		else
 			hnuFluo = I_Shells[0] - I_Shells[3]; // K alpha 2
 		
-		double theta=uniform_law()*M_PI;
-		double phi=uniform_law()*2*M_PI;
+		double theta=uniform_law()*2*M_PI;
+			
 		result->nParticlesCreated = 1;
 		result->particlesCreated = new void * [result->nParticlesCreated];
-		result->particlesCreated[0] = new Particle(rng_,hnuFluo,theta,phi,position_);
+		result->particlesCreated[0] = new Particle(rng_,hnuFluo,theta,position_);
 	}
       
       // not K
@@ -174,31 +172,29 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 void Particle::Compton(interactionResult* result)
 {
 	double ksi=energy_/511; // 511keV electron energy
-	double thetaCompton=parametric_arbitrary_law(compton_distrib,ksi,0,M_PI,1);
+	double thetaCompton=sign_rand()*parametric_arbitrary_law(compton_distrib,ksi,0,M_PI,1);
 	double comptonEnergy = energy_/(1+ksi*(1-cos(thetaCompton))); 
 	
-	double theta=0; // à derminer en fonction de theta_ et phi_ matrices de rotation ? quaternions ?
-	double phi=0; // idem
+	double theta=theta_+thetaCompton;
 	result->nParticlesCreated = 1;
 	result->depositedEnergy = energy_ - comptonEnergy;
 	result->particlesCreated = new void * [result->nParticlesCreated];
-	result->particlesCreated[0] = new Particle(rng_,comptonEnergy,theta,phi,position_);
+	result->particlesCreated[0] = new Particle(rng_,comptonEnergy,theta,position_);
 }
 
 void Particle::PairProduction(interactionResult* result)
 {
-	double theta=uniform_law()*M_PI;
-	double phi=uniform_law()*2*M_PI;
+	double theta=uniform_law()*2*M_PI;
 	result->nParticlesCreated = 2;
 	result->depositedEnergy = energy_ - 1022;
 	result->particlesCreated = new void * [result->nParticlesCreated];
-	result->particlesCreated[0] = new Particle(rng_,511,theta,phi,position_);
-	result->particlesCreated[1] = new Particle(rng_,511,theta+M_PI,phi,position_);
+	result->particlesCreated[0] = new Particle(rng_,511,theta,position_);
+	result->particlesCreated[1] = new Particle(rng_,511,theta+M_PI,position_);
 }
 
 // public functions
 
-double Particle::Propagation(double density, double*** data)
+double Particle::Propagation(Collimator* collimator, Detector* detector, double*** data)
 {
 	//Propagation	--------	
 	int idxData = 0;
@@ -207,7 +203,7 @@ double Particle::Propagation(double density, double*** data)
 		idxData++;
 	}
 
-	if ((mu = density * data[0][4][idxData] * 100) == 0) { // en m-1
+	if ((mu = detector->getDensity() * data[0][4][idxData] * 100) == 0) { // en m-1
 		cerr << "-- ERROR -- Attempted to divide by ZERO (mu = 1/lambda) !" << endl;
 		exit(EXIT_FAILURE);
 	}
@@ -215,7 +211,13 @@ double Particle::Propagation(double density, double*** data)
 	
 	double L = gsl_ran_exponential(rng_, lambda);
 	
-	return L;
+	if ((detector->isIn(position_[0],position_[1])) && (detector->isIn(position_[0]+L*cos(theta_),position_[1]+L*sin(theta_)))) {
+		position_[0] += L*cos(theta_);
+		position_[1] += L*sin(theta_);
+		return 1;
+	}
+	else
+		return 0;
 }
 
 interactionResult Particle::Interaction(double*** data)
@@ -225,7 +227,7 @@ interactionResult Particle::Interaction(double*** data)
 	
 	result.nParticlesCreated = 0;
 	result.particlesCreated = 0;
-	result.depositedEnergy = 0 ;
+	result.depositedEnergy = 0;
 	
 	int interactionType = selectInteractionType(data);
 	switch (interactionType) {		case 0:			cerr << "-- DEBUG -- Na Compton scattering"<< endl;

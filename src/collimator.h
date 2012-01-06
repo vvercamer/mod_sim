@@ -4,11 +4,20 @@
 #include <iostream>
 using namespace std;
 
+typedef struct
+{
+	double position [2];
+	double diameter;
+	double width;
+} collimatorParameters;
+
 class Collimator {
 private :
+	double position_[2];
+	double diameter_;
 	
 public :
-	Collimator();
+	Collimator(collimatorParameters parameters);
 	~Collimator();
 };
 

@@ -2,6 +2,7 @@
 #define _EXPERIMENT_H_INCLUDED
 #include "particle.h"
 #include "source.h"
+#include "collimator.h"
 #include "detector.h"
 #include "random.h"
 #include "interaction_data.h"
@@ -13,6 +14,7 @@ using namespace std;
 class Experiment {
 private :
 	Source *source_;
+	Collimator *collimator_;
 	Detector *detector_;
 	Particle *topOfStack_;
 	gsl_rng *rng_;
@@ -25,7 +27,7 @@ private :
 	//plus tard : initialiser l'enceinte, le collimateur et le détecteur.
 	
 public :
-	Experiment(double energy, double sourceSigma);
+	Experiment(sourceParameters sParam, collimatorParameters cParam, detectorParameters dParam);
 	~Experiment();
 //	void StartOfRun(int, char **);
 //	void EndOfRun();

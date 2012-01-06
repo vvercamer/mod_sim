@@ -14,6 +14,7 @@ using namespace std;
 #include "file_maker.h"
 #include "experiment.h"
 
+
 //#include "gnuplot.h"
 
 int main(int argc, char *argv[])
@@ -38,9 +39,26 @@ int main(int argc, char *argv[])
 
 	double *scintillationEnergy = new double [nEvents];
 
+	collimatorParameters cParam;
+	detectorParameters dParam;
+	sourceParameters sParam;
+
+	cParam.position[0]=-1;
+	cParam.position[1]=0;
+
+	dParam.position[0]=0;
+	dParam.position[1]=0;
+	dParam.diameter=0.02;
+	
+	sParam.position[0]=0;
+	sParam.position[1]=0;
+	sParam.diameter=0.05;
+	sParam.width=0.05;
+	sParam.energy=sourceEnergy;
+	sParam.sigma=sourceSigma;
 
 	cerr << "-- INFO -- New experiment" << endl;		
-	Experiment* experiment = new Experiment(sourceEnergy, sourceSigma); //energie 49,5 keV pour le thorium
+	Experiment* experiment = new Experiment(sParam, cParam, dParam); //energie 49,5 keV pour le thorium
 
 	for (i=0; i<nEvents; i++){
 		scintillationEnergy[i]=experiment->event();

@@ -4,6 +4,13 @@
 #include <iostream>
 using namespace std;
 
+typedef struct
+{
+	double position [2];
+	double diameter;
+	double width;
+} detectorParameters;
+
 class Detector {
 private :
 	static const double efficiency_ = 0.04; //efficiency ~  4%  (taux  de  luminescence  du  scintillateur = η*ξ)
@@ -14,13 +21,16 @@ private :
 	static const double CE_ = 0.95; //CE ~  95%  (efficacité  de  collection  de  l’électron  de  conversion  par  la  première dynode
 	static const double G_ = 10e5;
 	static const double density_ = 3.67; //en kg/m3 ou g/cm3
+	double position_[2];
+	double diameter_, width_;
 		
 public :
-	Detector();
+	Detector(detectorParameters parameters);
 	~Detector();
 	double getDensity();
 	double scintillation(double electronEnergy);
 	double photomultiplication(double nPhotons);
+	int isIn(double x, double y);
 };
 
 

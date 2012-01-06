@@ -10,8 +10,8 @@ gsl_rng* random_init()
 //	return gsl_rng_alloc(T);
 	gsl_rng * rand_gen;
 	rand_gen = gsl_rng_alloc(gsl_rng_taus);
-  gsl_rng_set(rand_gen,time(NULL));
-  return rand_gen;
+	gsl_rng_set(rand_gen,time(NULL));
+	return rand_gen;
 }
 
 double uniform_law()
@@ -65,6 +65,13 @@ double parametric_arbitrary_law(double (*distribution)(double x, double p), doub
 		v=(upper_dist-lower_dist)*uniform_law();
 	}while ( u > distribution(v,parameter) / max_distrib );
 	return v;
+}
+
+double sign_rand()
+{
+	double x = uniform_law()-0.5;
+	if (x > 0) return 1;
+	else return -1;
 }
 
 //double gaussian_law	

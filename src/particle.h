@@ -7,6 +7,8 @@ using namespace std;
 
 #include "random.h"
 #include "interaction_data.h"
+#include "collimator.h"
+#include "detector.h"
 
 #include <gsl/gsl_sf_log.h>	 // ln
 #include <gsl/gsl_randist.h> // loi exp
@@ -25,8 +27,8 @@ class Particle {
 private : // définition les données membres de la classe
 	static int n_particles_;
 	gsl_rng * rng_;
-	double energy_, theta_, phi_;
-	double position_[3];
+	double energy_, theta_;
+	double position_[2];
 	Particle *next_;
 	
 	//private functions
@@ -37,12 +39,12 @@ private : // définition les données membres de la classe
 	
 public : // définition les fonctions membres de la classe
 //	Particle(gsl_rng * rng, double energy);
-	Particle(gsl_rng * rng, double energy, double theta, double phi, double position[3]);
+	Particle(gsl_rng * rng, double energy, double theta, double position[3]);
 	~Particle();
 //	void setPosition(){};
 	Particle* getNext();	void setNext(Particle* next);
 	void countParticles();
-	double Propagation(double density, double*** data);
+	double Propagation(Collimator* collimator, Detector* detector, double*** data);
 	interactionResult Interaction(double *** data);
 	double getEnergy(){return energy_;};
 	

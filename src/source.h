@@ -1,22 +1,30 @@
 #ifndef _SOURCE_H_INCLUDED
 #define _SOURCE_H_INCLUDED
 #include "particle.h"
+#include "random.h"
 
 #include <iostream>
 using namespace std;
+
+typedef struct
+{
+	double position [2];
+	double diameter;
+	double width;
+	double energy;
+	double sigma;
+} sourceParameters;
 
 class Source {
 private :
 	gsl_rng* rng_;
 	double energy_;
-	double sourceSigma_;
-	double sourcePosition_[3];
+	double sigma_;
+	double position_[2];
 	
 public :
-	Source(gsl_rng*, double energy, double sourceSigma);
+	Source(gsl_rng * rng, sourceParameters parameters);
 	~Source();
-//	double getEnergy(void){return(energy);};
-//	void setEnergy(double a){energy=a;};
 	Particle* emitParticle();
 };
 
