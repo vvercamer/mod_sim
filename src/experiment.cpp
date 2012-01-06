@@ -55,8 +55,6 @@ Experiment::~Experiment()
 double Experiment::event()
 {
 	cerr << "\n-- INFO -- New event" << endl;	
-	double lambda = 1; // en m
-	double mu = 1;
 	double scintillationEnergy = 0;
 	add2stack(source_->emitParticle());
 
@@ -67,22 +65,8 @@ double Experiment::event()
 		cerr << "-- DEBUG -- Taking care of particle " << current << endl;
 		removeTopOfStack();
 		//current->countParticles();
-//Propagation	--------	
-		int idxData=0;
-		while (current->getEnergy() > data[0][0][idxData] && idxData < (nLines-1)) {
-			idxData++;
-		}
 
-		if ((mu = detector_->getDensity() * data[0][4][idxData] * 100) == 0) { // en m-1
-			cerr << "-- ERROR -- Attempted to divide by ZERO (mu = 1/lambda) !" << endl;
-			exit(EXIT_FAILURE);
-		}
-		lambda = 1/mu; //en m
-		current->Propagation(lambda);
-//		cerr << "-- DEBUG -- distance de propagation : " << current->Propagation(lambda) << endl;
-//End of Propagation	--------
-
-		if (current->Propagation(lambda) < 0.01) {
+		if (current->Propagation(detector_->getDensity(),data) < 0.01) {
 			interactionResult result = current->Interaction(data);
 			scintillationEnergy += result.depositedEnergy;
 		// Adding to the stack the particles resulting from previous interaction

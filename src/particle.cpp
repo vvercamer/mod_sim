@@ -198,10 +198,23 @@ void Particle::PairProduction(interactionResult* result)
 
 // public functions
 
-double Particle::Propagation(double lambda)
+double Particle::Propagation(double density, double*** data)
 {
-	double L=0;
-	L=gsl_ran_exponential(rng_, lambda);
+	//Propagation	--------	
+	int idxData = 0;
+	double mu = 0;
+	while (energy_ > data[0][0][idxData] && idxData < (nLines-1)) {
+		idxData++;
+	}
+
+	if ((mu = density * data[0][4][idxData] * 100) == 0) { // en m-1
+		cerr << "-- ERROR -- Attempted to divide by ZERO (mu = 1/lambda) !" << endl;
+		exit(EXIT_FAILURE);
+	}
+	double lambda = 1/mu; //en m
+	
+	double L = gsl_ran_exponential(rng_, lambda);
+	
 	return L;
 }
 

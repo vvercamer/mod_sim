@@ -42,7 +42,7 @@ public : // définition les fonctions membres de la classe
 //	void setPosition(){};
 	Particle* getNext();	void setNext(Particle* next);
 	void countParticles();
-	double Propagation(double lambda);
+	double Propagation(double density, double*** data);
 	interactionResult Interaction(double *** data);
 	double getEnergy(){return energy_;};
 	
