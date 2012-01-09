@@ -6,7 +6,7 @@ void histo_maker(int n, double* omega, double hmax)
 	int i;
 	int ncolumns = 2;
 	int nbhist = 1000;
-	double hmin = 1;
+	double hmin = 0;
 	double *histogram = new double [nbhist];
 	double *N = new double [nbhist];
 	double **outtable = new double* [nbhist];

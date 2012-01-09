@@ -111,7 +111,7 @@ double compton_distrib(double x,double ksi) {
 void Particle::PhotoElectric(int atom, interactionResult * result)
 {
 	const double * Shells = 0;
-  
+
 	if (atom == 0){
 		Shells = Na_Shells;
 	}
@@ -175,7 +175,12 @@ void Particle::Compton(interactionResult* result)
 	double thetaCompton=sign_rand()*parametric_arbitrary_law(compton_distrib,ksi,0,M_PI,1);
 	double comptonEnergy = energy_/(1+ksi*(1-cos(thetaCompton))); 
 	
-	double theta=theta_+thetaCompton;
+	double theta=theta_ + thetaCompton;
+	while (theta>2*M_PI)
+		theta -= 2*M_PI;
+	while (theta<0)
+		theta += 2*M_PI;
+		
 	result->nParticlesCreated = 1;
 	result->depositedEnergy = energy_ - comptonEnergy;
 	result->particlesCreated = new void * [result->nParticlesCreated];
@@ -184,7 +189,7 @@ void Particle::Compton(interactionResult* result)
 
 void Particle::PairProduction(interactionResult* result)
 {
-	double theta=uniform_law()*2*M_PI;
+	double theta=uniform_law()*M_PI;
 	result->nParticlesCreated = 2;
 	result->depositedEnergy = energy_ - 1022;
 	result->particlesCreated = new void * [result->nParticlesCreated];
@@ -207,17 +212,48 @@ double Particle::Propagation(Collimator* collimator, Detector* detector, double*
 		cerr << "-- ERROR -- Attempted to divide by ZERO (mu = 1/lambda) !" << endl;
 		exit(EXIT_FAILURE);
 	}
-	double lambda = 1/mu; //en m
 	
-	double L = gsl_ran_exponential(rng_, lambda);
+	double L = gsl_ran_exponential(rng_, 1/mu);
 	
 	if ((detector->isIn(position_[0],position_[1])) && (detector->isIn(position_[0]+L*cos(theta_),position_[1]+L*sin(theta_)))) {
 		position_[0] += L*cos(theta_);
 		position_[1] += L*sin(theta_);
 		return 1;
-	}
-	else
+		}
+	// else if particle is in detector but gets out
+	else if (detector->isIn(position_[0],position_[1])) {
 		return 0;
+	}
+	// else if particle is not in the detector
+	else {
+		if(cos(theta_) == 0)
+			return 0;
+		
+		double yIntersec = 0;
+		
+		// if it's before collimator
+		if(position_[0] <= collimator->getX()) {
+			yIntersec = position_[1] + (collimator->getX() - position_[0])*tan(theta_);
+			
+			// if it doesn't get through collimator
+			if((cos(theta_) < 0) || ((yIntersec < (collimator->getY() - (collimator->getDiameter())/2)) 
+						 || (yIntersec > (collimator->getY() + (collimator->getDiameter())/2)))) {
+				return 0;
+			}
+		}
+		
+		// if particle is after collimator or it got through collimator
+		yIntersec = position_[1] + (detector->getX() - position_[0])*tan(theta_);
+		// if particle doesn't reach the detector
+		if((cos(theta_) < 0) || ((yIntersec < (detector->getY() - (detector->getDiameter())/2)) 
+					 || (yIntersec > (detector->getY() + (detector->getDiameter())/2)))) {
+			return 0;
+		}
+		// finally, if particle reaches detector !
+		position_[0] = detector->getX();
+		position_[1] = yIntersec;
+		return 1;
+	}
 }
 
 interactionResult Particle::Interaction(double*** data)

@@ -27,10 +27,16 @@ private :
 public :
 	Detector(detectorParameters parameters);
 	~Detector();
-	double getDensity();
 	double scintillation(double electronEnergy);
 	double photomultiplication(double nPhotons);
 	int isIn(double x, double y);
+	
+	// getters
+	double getDensity();
+	double getX(){return position_[0];};
+	double getY(){return position_[1];};
+	double getDiameter() {return diameter_;};
+
 };
 
 

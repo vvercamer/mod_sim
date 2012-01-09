@@ -9,8 +9,6 @@ using namespace std;
 typedef struct
 {
 	double position [2];
-	double diameter;
-	double width;
 	double energy;
 	double sigma;
 } sourceParameters;

@@ -2,6 +2,7 @@
 #include <string>
 #include <math.h>
 #include <gsl/gsl_math.h>
+#include <sys/time.h>
 using namespace std;
 
 //random
@@ -19,6 +20,10 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+	struct timeval startTime;
+    struct timeval endTime;
+	
+	gettimeofday(&startTime, NULL);
 	cerr << "\n****************************************" << endl
 		   << "********  START THE SIMULATION  ********" << endl
 		   << "****************************************\n" << endl;
@@ -43,17 +48,17 @@ int main(int argc, char *argv[])
 	detectorParameters dParam;
 	sourceParameters sParam;
 
-	cParam.position[0]=-1;
+	cParam.position[0]=0.01;
 	cParam.position[1]=0;
+	cParam.diameter=0.02;
 
-	dParam.position[0]=0;
+	dParam.position[0]=0.02;
 	dParam.position[1]=0;
-	dParam.diameter=0.02;
+	dParam.diameter=0.05;
+	dParam.width=0.05;
 	
 	sParam.position[0]=0;
 	sParam.position[1]=0;
-	sParam.diameter=0.05;
-	sParam.width=0.05;
 	sParam.energy=sourceEnergy;
 	sParam.sigma=sourceSigma;
 
@@ -67,6 +72,11 @@ int main(int argc, char *argv[])
 	histo_maker(nEvents,scintillationEnergy,sourceEnergy*1.1);
 	
 	cerr << "-- INFO -- The END" << endl;
+	
+    gettimeofday(&endTime, NULL);
+    double tS = startTime.tv_sec*1000000 + (startTime.tv_usec);
+    double tE = endTime.tv_sec*1000000  + (endTime.tv_usec);
+    cout << "-- INFO -- execution time : " << (tE - tS)*1e-6 << " s" << endl;
 
 	return 0;
 }

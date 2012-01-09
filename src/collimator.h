@@ -8,7 +8,6 @@ typedef struct
 {
 	double position [2];
 	double diameter;
-	double width;
 } collimatorParameters;
 
 class Collimator {
@@ -19,6 +18,10 @@ private :
 public :
 	Collimator(collimatorParameters parameters);
 	~Collimator();
+	// getters
+	double getX(){return position_[0];};
+	double getY(){return position_[1];};
+	double getDiameter(){return diameter_;};
 };
 
 #endif
