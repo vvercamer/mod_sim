@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
 	int nEvents = 1;
 	double sourceEnergy = 49.5; //en keV
-	double sourceSigma = 1;
+	double sourceSigma = 0;
 	if (argc == 3) {
 		nEvents = atoi(argv[1]);
 		sourceEnergy = atof(argv[2]); //en keV

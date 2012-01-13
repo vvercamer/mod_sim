@@ -87,11 +87,8 @@ double Experiment::event()
 	cerr << "-- DEBUG -- Deposited energy : " << scintillationEnergy << " keV" << endl;
 	cerr << "-- DEBUG -- Collected charges : " << detector_->photomultiplication(detector_->scintillation(scintillationEnergy)) << endl;
 	
-	double Fano=0.2;
-//	cerr << "Delta E = " << gsl_ran_gaussian(rng_, scintillationEnergy*2.35*sqrt(Fano)) << endl;
-	cerr << "Sigma   = " << sqrt(scintillationEnergy)*2.35*Fano << endl;
-	cerr << "Delta E = " << gsl_ran_gaussian(rng_, sqrt(scintillationEnergy)*2.35*Fano) << endl;
-	return (scintillationEnergy);//*(1 + gsl_ran_gaussian(rng_, scintillationEnergy*Fano)));
+	double Fano=0.18;
+	return (scintillationEnergy + gsl_ran_gaussian(rng_, sqrt(scintillationEnergy)*Fano));
 }
 
 Particle * Experiment::getTopOfStack()
