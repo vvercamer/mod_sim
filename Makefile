@@ -14,8 +14,8 @@ ROOT_LIB = $(shell root-config --libs)
 
 CC = g++
 CFLAGS = -Wall -Werror -O2 -Wshadow
-INCLUDES = -I/usr/local/include
-LIBS = -L/usr/local/lib -lgsl -lgslcblas -lm 
+INCLUDES = -I/usr/local/include -I/home/promo127/vvercame/homebrew/include
+LIBS = -L/usr/local/lib -lgsl -lgslcblas -lm -L/home/promo127/vvercame/homebrew/lib
 # -lpthread 
 SIM_OBJ = $(patsubst %,$(LIB)/%,$(SIM_OBJ_))
 POSTPROCESS_OBJ = $(patsubst %,$(LIB)/%,$(POSTPROCESS_OBJ_))

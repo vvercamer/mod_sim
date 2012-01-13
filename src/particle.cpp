@@ -111,17 +111,19 @@ double compton_distrib(double x,double ksi) {
 void Particle::PhotoElectric(int atom, interactionResult * result)
 {
 	const double * Shells = 0;
-
+	double Auger = 0;
 	if (atom == 0){
 		Shells = Na_Shells;
+		Auger = Na_Auger;
 	}
 	else if (atom == 1){
 		Shells = I_Shells;
+		Auger = I_Auger;
 	}
 		
 	// Determination of the energy of the photoelectron
 	int i=-1;
-	double random;
+	double random=0;
 	double electronEnergy = 0;
 	while (electronEnergy == 0) {
 		i++;
@@ -133,39 +135,40 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 			electronEnergy = energy_ - Shells[i];
     }
 
-	result->depositedEnergy = electronEnergy;
+//	result->depositedEnergy = electronEnergy;
 
 	// Auger / Fluo
 	random = uniform_law();
   
-	if (random < I_Auger) {
+	if (random < Auger) {
 		// AUGER
 		cerr << "-- DEBUG -- Auger" << endl;
+		result->depositedEnergy =  energy_;
     }
 	else{
 		// FLUO
-      cerr << "-- DEBUG -- Fluo " << endl;
+		cerr << "-- DEBUG -- Fluo " << endl;
       
-      // K alpha
-	if (i == 0) {
-		cerr << " (K alpha) " << endl;
-		random = uniform_law();
-		double hnuFluo;
-		if (random <= 0.5)
-			hnuFluo = I_Shells[0] - I_Shells[2]; // K alpha 1
-		else
-			hnuFluo = I_Shells[0] - I_Shells[3]; // K alpha 2
-		
-		double theta=uniform_law()*2*M_PI;
+		// K alpha
+		if (i == 0) {
+			cerr << " (K alpha) " << endl;
+			random = uniform_law();
+			double hnuFluo;
+			if (random <= 0.5)
+				hnuFluo = I_Shells[0] - I_Shells[2]; // K alpha 1
+			else
+				hnuFluo = I_Shells[0] - I_Shells[3]; // K alpha 2
 			
-		result->nParticlesCreated = 1;
-		result->particlesCreated = new void * [result->nParticlesCreated];
-		result->particlesCreated[0] = new Particle(rng_,hnuFluo,theta,position_);
-	}
-      
-      // not K
-	else
-		cerr << endl << "Ignoring fluorescence process (layer with a vacancy =/= K)" << endl;
+			double theta=uniform_law()*2*M_PI;
+				
+			result->nParticlesCreated = 1;
+			result->particlesCreated = new void * [result->nParticlesCreated];
+			result->particlesCreated[0] = new Particle(rng_,hnuFluo,theta,position_);
+			result->depositedEnergy =  energy_ - hnuFluo;
+		}
+		// not K
+		else
+			cerr << endl << "Ignoring fluorescence process (layer with a vacancy =/= K)" << endl;
 	}
 }
 

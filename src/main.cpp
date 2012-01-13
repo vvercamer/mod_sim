@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
 	int nEvents = 1;
 	double sourceEnergy = 49.5; //en keV
-	double sourceSigma = 2;
+	double sourceSigma = 1;
 	if (argc == 3) {
 		nEvents = atoi(argv[1]);
 		sourceEnergy = atof(argv[2]); //en keV
@@ -69,6 +69,7 @@ int main(int argc, char *argv[])
 		scintillationEnergy[i]=experiment->event();
 	}
 	
+	cerr << "-- INFO -- Making the output files" << endl;
 	histo_maker(nEvents,scintillationEnergy,sourceEnergy*1.1);
 	
 	cerr << "-- INFO -- The END" << endl;

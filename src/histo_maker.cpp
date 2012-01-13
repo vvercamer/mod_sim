@@ -55,8 +55,9 @@ void histo_maker(int n, double* omega, double hmax)
 	delete [] size;
 	
 	// ménage
-	delete [] outtable;
+	
 	delete [] outtable2;
+	delete [] outtable;
 	delete [] omega;
 	delete [] N;
 	delete [] histogram;
