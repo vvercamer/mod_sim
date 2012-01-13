@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 	cParam.position[1]=0;
 	cParam.diameter=0.02;
 
-	dParam.position[0]=0.02;
+	dParam.position[0]=0.04;
 	dParam.position[1]=0;
 	dParam.diameter=0.05;
 	dParam.width=0.05;

@@ -167,8 +167,10 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 			result->depositedEnergy =  energy_ - hnuFluo;
 		}
 		// not K
-		else
+		else {
 			cerr << endl << "Ignoring fluorescence process (layer with a vacancy =/= K)" << endl;
+			result->depositedEnergy = 0;
+		}
 	}
 }
 
