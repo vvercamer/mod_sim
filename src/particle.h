@@ -36,6 +36,7 @@ private : // définition les données membres de la classe
 	void PhotoElectric(int atom, interactionResult* result);
 	void Compton(interactionResult* result);
 	void PairProduction(interactionResult* result);
+	void AugerFluo(int atom, interactionResult * result, const double * Shells, double probaAuger, int emptyShell);
 	
 public : // définition les fonctions membres de la classe
 //	Particle(gsl_rng * rng, double energy);

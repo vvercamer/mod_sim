@@ -57,7 +57,10 @@ double Experiment::event()
 {
 	cerr << "\n-- INFO -- New event" << endl;	
 	double scintillationEnergy = 0;
-	add2stack(source_->emitParticle());
+
+	sourceEmission emission =  source_ -> emitParticle(22);
+	for(int i=0; i < emission.nParticlesEmitted; i++)
+		add2stack(emission.particlesEmitted[i]);
 
 	while (topOfStack_ != 0){
 		Particle* current = topOfStack_;
@@ -73,9 +76,6 @@ double Experiment::event()
 		// Adding to the stack the particles resulting from previous interaction
 			for (int i=0; i < result.nParticlesCreated; i++)
 				add2stack((Particle*)result.particlesCreated[i]);
-		}
-		else {
-			cerr << "-- DEBUG -- The particle got out the experiment !" << endl;
 		}
 		
 		delete current;

@@ -111,14 +111,14 @@ double compton_distrib(double x,double ksi) {
 void Particle::PhotoElectric(int atom, interactionResult * result)
 {
 	const double * Shells = 0;
-	double Auger = 0;
+	double probaAuger = 0;
 	if (atom == 0){
 		Shells = Na_Shells;
-		Auger = Na_Auger;
+		probaAuger = Na_Auger;
 	}
 	else if (atom == 1){
 		Shells = I_Shells;
-		Auger = I_Auger;
+		probaAuger = I_Auger;
 	}
 		
 	// Determination of the energy of the photoelectron
@@ -131,7 +131,7 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
       
 		if (Shells[i] == 0)
 			electronEnergy = energy_;
-		else if (energy_ > Shells[i] && random < 0.9)
+		else if (energy_ >= Shells[i] && random < 0.9)
 			electronEnergy = energy_ - Shells[i];
     }
 
@@ -140,7 +140,7 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 	// Auger / Fluo
 	random = uniform_law();
   
-	if (random < Auger) {
+	if (random < probaAuger) {
 		// AUGER
 		cerr << "-- DEBUG -- Auger" << endl;
 		result->depositedEnergy =  energy_;
@@ -170,6 +170,106 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 		else {
 			cerr << endl << "Ignoring fluorescence process (layer with a vacancy =/= K)" << endl;
 			result->depositedEnergy = 0;
+		}
+	}
+}
+
+void Particle::AugerFluo(int atom, interactionResult * result, const double * Shells, double probaAuger, int emptyShell)
+{
+	double random = uniform_law();
+	if(Shells[emptyShell] == 0)
+		return;
+
+	// SODIUM
+	if(atom == 0) {
+	}
+
+	// IODINE
+	if(atom == 1) {
+		if(random < probaAuger) {
+			// AUGER
+			cerr << "-- DEBUG -- Auger" << endl;
+
+			if ( emptyShell == 0 ) {
+				random = uniform_law()*3+0.01;
+				int shell = ceil(random);
+				result->depositedEnergy += Shells[0] - 2*Shells[shell];
+				AugerFluo(atom,result,Shells,probaAuger,shell);
+				AugerFluo(atom,result,Shells,probaAuger,shell);
+			}
+		
+			else if( (emptyShell == 1) || (emptyShell == 2) || (emptyShell == 3)) {
+				result->depositedEnergy += Shells[emptyShell] - 2*Shells[4];
+				AugerFluo(atom,result,Shells,probaAuger,4);
+				AugerFluo(atom,result,Shells,probaAuger,4);
+			}
+		
+			else if( emptyShell == 4 ) {
+				result->depositedEnergy += Shells[4];
+			}
+
+		}
+		
+		else {
+			// FLUO
+			cerr << "-- DEBUG -- Fluo " ;
+
+			// K layer
+			if ( emptyShell == 0 ) {
+				cerr << " (K alpha) " << endl;
+				random = uniform_law();
+				double hnuFluo;
+				if (random <= 0.5)
+					hnuFluo = I_Shells[0] - I_Shells[2]; // K alpha 1
+				else
+					hnuFluo = I_Shells[0] - I_Shells[3]; // K alpha 2
+		
+		
+				double theta=uniform_law()*2*M_PI;
+		
+				result->nParticlesCreated += 1;
+				void ** save = new void * [result->nParticlesCreated];
+				for(int i = 0; i < result->nParticlesCreated - 1; i++)
+					save[i] = result->particlesCreated[i];
+				delete result->particlesCreated;
+				result->particlesCreated = save;
+				result->particlesCreated[result->nParticlesCreated-1] = new Particle(rng_,hnuFluo,theta,position_);
+
+			}
+
+			// L layer
+			else if( (emptyShell == 1) || (emptyShell == 2) || (emptyShell == 3)) {
+				cerr << " (L alpha) " << endl;
+				double hnuFluo;
+				hnuFluo = I_Shells[emptyShell] - I_Shells[4]; // L alpha
+		
+				double theta=uniform_law()*2*M_PI;
+		
+				result->nParticlesCreated += 1;
+				void ** save = new void * [result->nParticlesCreated];
+				for(int i = 0; i < result->nParticlesCreated - 1; i++)
+					save[i] = result->particlesCreated[i];
+				delete result->particlesCreated;
+				result->particlesCreated = save;
+				result->particlesCreated[result->nParticlesCreated-1] = new Particle(rng_,hnuFluo,theta,position_);
+			}
+		
+			// M layer
+			else if(emptyShell == 4) {
+				cerr << " (M alpha) " << endl;
+				double hnuFluo;
+				hnuFluo = I_Shells[emptyShell]; // M alpha
+		
+				double theta=uniform_law()*2*M_PI;
+		
+				result->nParticlesCreated += 1;
+				void ** save = new void * [result->nParticlesCreated];
+				for(int i = 0; i < result->nParticlesCreated - 1; i++)
+					save[i] = result->particlesCreated[i];
+				delete result->particlesCreated;
+				result->particlesCreated = save;
+				result->particlesCreated[result->nParticlesCreated-1] = new Particle(rng_,hnuFluo,theta,position_);
+			}
 		}
 	}
 }

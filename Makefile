@@ -14,8 +14,10 @@ ROOT_LIB = $(shell root-config --libs)
 
 CC = g++
 CFLAGS = -Wall -Werror -O2 -Wshadow
-INCLUDES = -I/usr/local/include -I/home/promo127/vvercame/homebrew/include
-LIBS = -L/usr/local/lib -lgsl -lgslcblas -lm -L/home/promo127/vvercame/homebrew/lib
+INCLUDES = -I/usr/local/include 
+# -I/home/promo127/vvercame/homebrew/include
+LIBS = -L/usr/local/lib -lgsl -lgslcblas -lm
+# -L/home/promo127/vvercame/homebrew/lib
 # -lpthread 
 SIM_OBJ = $(patsubst %,$(LIB)/%,$(SIM_OBJ_))
 POSTPROCESS_OBJ = $(patsubst %,$(LIB)/%,$(POSTPROCESS_OBJ_))
@@ -26,7 +28,7 @@ POSTPROCESS_BIN=$(BIN)/$(POSTPROCESS_BIN_)
 
 
 
-all: $(SIM_BIN) $(POSTPROCESS_BIN) 
+all: $(LIB) $(SIM_BIN) $(POSTPROCESS_BIN) 
 
 clean:
 	rm -f $(EXEC_NAME) $(OBJ_FILES)
@@ -39,6 +41,9 @@ $(SIM_BIN): $(SIM_OBJ)
 
 $(POSTPROCESS_BIN): $(POSTPROCESS_OBJ)
 	$(CC) -o $@ $+ $(LIBS) $(ROOTFLAGS)
+
+$(LIB):
+	mkdir -p $(LIB)
 
 #$(LIB)/%.o: %.c
 #	gcc $(CFLAGS) $(INCLUDES) -o $@ -c $<

@@ -10,20 +10,23 @@ typedef struct
 {
 	double position [2];
 	double energy;
-	double sigma;
 } sourceParameters;
+
+typedef struct {
+	int nParticlesEmitted;
+	Particle ** particlesEmitted;
+} sourceEmission;
 
 class Source {
 private :
 	gsl_rng* rng_;
 	double energy_;
-	double sigma_;
 	double position_[2];
 	
 public :
 	Source(gsl_rng * rng, sourceParameters parameters);
 	~Source();
-	Particle* emitParticle();
+	sourceEmission emitParticle(int sourceType);
 };
 
 #endif

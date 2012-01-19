@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
 	int nEvents = 1;
 	double sourceEnergy = 49.5; //en keV
-	double sourceSigma = 0;
+
 	if (argc == 3) {
 		nEvents = atoi(argv[1]);
 		sourceEnergy = atof(argv[2]); //en keV
@@ -60,7 +60,6 @@ int main(int argc, char *argv[])
 	sParam.position[0]=0;
 	sParam.position[1]=0;
 	sParam.energy=sourceEnergy;
-	sParam.sigma=sourceSigma;
 
 	cerr << "-- INFO -- New experiment" << endl;		
 	Experiment* experiment = new Experiment(sParam, cParam, dParam); //energie 49,5 keV pour le thorium
@@ -70,6 +69,10 @@ int main(int argc, char *argv[])
 	}
 	
 	cerr << "-- INFO -- Making the output files" << endl;
+
+	if (sourceEnergy == 22)
+		sourceEnergy=1275;
+		
 	histo_maker(nEvents,scintillationEnergy,sourceEnergy*1.1);
 	
 	cerr << "-- INFO -- The END" << endl;
