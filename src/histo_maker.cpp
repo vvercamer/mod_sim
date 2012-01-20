@@ -53,14 +53,18 @@ void histo_maker(int n, double* omega, double hmax)
 	}
 	
 	file_maker(size, outtable2, filename);
-	delete [] size;
 	
 	// ménage
-	
+	for( i=0 ; i < n ; i++ )
+		delete [] outtable2[i];
+		
 	delete [] outtable2;
 	*/
+	for( i=0 ; i < nbhist ; i++ )
+		delete [] outtable[i];
+		
 	delete [] outtable;
-	delete [] omega;
+	delete [] size;
 	delete [] N;
 	delete [] histogram;
 

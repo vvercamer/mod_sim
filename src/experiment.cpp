@@ -28,6 +28,7 @@ Experiment::~Experiment()
 	
 	delete detector_;
 	delete source_;
+	delete collimator_;
 	
 	// Deleting Interaction Data
 	int i,j = 0;
@@ -59,8 +60,10 @@ double Experiment::event(int sourceType)
 	double scintillationEnergy = 0;
 
 	sourceEmission emission =  source_ -> emitParticle(sourceType);
-	for(int i=0; i < emission.nParticlesEmitted; i++)
+	for(int i=0; i < emission.nParticlesEmitted; i++) {
 		add2stack(emission.particlesEmitted[i]);
+		delete emission.particlesEmitted;
+	}
 
 	while (topOfStack_ != 0){
 		Particle* current = topOfStack_;
@@ -76,6 +79,7 @@ double Experiment::event(int sourceType)
 		// Adding to the stack the particles resulting from previous interaction
 			for (int i=0; i < result.nParticlesCreated; i++)
 				add2stack((Particle*)result.particlesCreated[i]);
+				delete result.particlesCreated;
 		}
 		
 		delete current;

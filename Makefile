@@ -13,6 +13,7 @@ ROOT_INCLUDE = -I $(ROOTSYS)/include
 ROOT_LIB = $(shell root-config --libs)
 
 CC = g++
+#CFLAGS = -Wall -Werror -g -O0 -Wshadow
 CFLAGS = -Wall -Werror -O2 -Wshadow
 INCLUDES = -I/usr/local/include 
 # -I/home/promo127/vvercame/homebrew/include

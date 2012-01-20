@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	double *scintillationEnergy = new double [nEvents];
+	double* scintillationEnergy = new double [nEvents];
 
 	collimatorParameters cParam;
 	detectorParameters dParam;
@@ -83,6 +83,9 @@ int main(int argc, char *argv[])
 		sourceEnergy=1275;
 		
 	histo_maker(nEvents,scintillationEnergy,sourceEnergy*1.1);
+	
+	delete[] scintillationEnergy;
+//	delete[] experiment;
 	
 	if(LogLevel>1) cerr << "-- INFO -- The END" << endl;
 	
