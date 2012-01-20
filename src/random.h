@@ -3,6 +3,9 @@
 
 #include <iostream>
 using namespace std;
+
+extern int LogLevel;
+
 #include <gsl/gsl_rng.h>
 #include <math.h>
 //#include <gsl/gsl_randist.h>

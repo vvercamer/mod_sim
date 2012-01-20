@@ -18,6 +18,13 @@ using namespace std;
 
 //#include "gnuplot.h"
 
+#define ERROR 0
+#define WARNING 1
+#define INFO 2
+#define DEBUG 3
+
+int LogLevel = INFO;
+
 int main(int argc, char *argv[])
 {
 	struct timeval startTime;
@@ -60,22 +67,24 @@ int main(int argc, char *argv[])
 	sParam.position[0]=0;
 	sParam.position[1]=0;
 	sParam.energy=sourceEnergy;
+	sParam.sourceType=0;
 
-	cerr << "-- INFO -- New experiment" << endl;		
+	if(LogLevel>1) cerr << "-- INFO -- New experiment" << endl;		
 	Experiment* experiment = new Experiment(sParam, cParam, dParam); //energie 49,5 keV pour le thorium
 
+	if(LogLevel>1) cerr << "-- INFO -- Starting for " << nEvents << " events" << endl;		
 	for (i=0; i<nEvents; i++){
-		scintillationEnergy[i]=experiment->event();
+		scintillationEnergy[i]=experiment->event(sParam.sourceType);
 	}
 	
-	cerr << "-- INFO -- Making the output files" << endl;
+	if(LogLevel>1) cerr << "-- INFO -- Making the output files" << endl;
 
-	if (sourceEnergy == 22)
+	if (sParam.sourceType == 22)
 		sourceEnergy=1275;
 		
 	histo_maker(nEvents,scintillationEnergy,sourceEnergy*1.1);
 	
-	cerr << "-- INFO -- The END" << endl;
+	if(LogLevel>1) cerr << "-- INFO -- The END" << endl;
 	
     gettimeofday(&endTime, NULL);
     double tS = startTime.tv_sec*1000000 + (startTime.tv_usec);

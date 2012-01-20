@@ -38,6 +38,7 @@ void histo_maker(int n, double* omega, double hmax)
 	//écriture dans les fichiers (taille, pointeur vers un tableau, nom fichier)
 	file_maker(size, outtable, filename);
 	
+	/*
 	size[0] = n;
 	size[1] = 1;
 	
@@ -57,6 +58,7 @@ void histo_maker(int n, double* omega, double hmax)
 	// ménage
 	
 	delete [] outtable2;
+	*/
 	delete [] outtable;
 	delete [] omega;
 	delete [] N;

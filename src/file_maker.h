@@ -7,6 +7,8 @@
 #include <fstream>
 using namespace std;
 
+extern int LogLevel;
+
 int file_maker(int * size, double ** outtable, const string &filename);
 
 #endif

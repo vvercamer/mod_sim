@@ -10,6 +10,7 @@
 #include <iostream>
 using namespace std;
 
+extern int LogLevel;
 
 class Experiment {
 private :
@@ -31,7 +32,7 @@ public :
 	~Experiment();
 //	void StartOfRun(int, char **);
 //	void EndOfRun();
-	double event();
+	double event(int sourceType);
 };
 
 #endif

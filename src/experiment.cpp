@@ -53,12 +53,12 @@ Experiment::~Experiment()
 //
 //}
 
-double Experiment::event()
+double Experiment::event(int sourceType)
 {
-	cerr << "\n-- INFO -- New event" << endl;	
+	if(LogLevel>2) cerr << "\n-- DEBUG -- New event" << endl;	
 	double scintillationEnergy = 0;
 
-	sourceEmission emission =  source_ -> emitParticle(22);
+	sourceEmission emission =  source_ -> emitParticle(sourceType);
 	for(int i=0; i < emission.nParticlesEmitted; i++)
 		add2stack(emission.particlesEmitted[i]);
 
@@ -66,7 +66,7 @@ double Experiment::event()
 		Particle* current = topOfStack_;
 		//showStack();
 
-		cerr << "-- DEBUG -- Taking care of particle " << current << endl;
+	//	cerr << "-- DEBUG -- Taking care of particle " << current << " energy : " << current->getEnergy() << endl;
 		removeTopOfStack();
 		//current->countParticles();
 
@@ -84,10 +84,10 @@ double Experiment::event()
 
 
 	}
-	cerr << "-- DEBUG -- Deposited energy : " << scintillationEnergy << " keV" << endl;
-	cerr << "-- DEBUG -- Collected charges : " << detector_->photomultiplication(detector_->scintillation(scintillationEnergy)) << endl;
+	if(LogLevel>2) cerr << "-- DEBUG -- Deposited energy : " << scintillationEnergy << " keV" << endl;
+	if(LogLevel>2) cerr << "-- DEBUG -- Collected charges : " << detector_->photomultiplication(detector_->scintillation(scintillationEnergy)) << endl;
 	
-	double Fano=0.18;
+	double Fano=0.21;
 	return (scintillationEnergy + gsl_ran_gaussian(rng_, sqrt(scintillationEnergy)*Fano));
 }
 
@@ -98,7 +98,7 @@ Particle * Experiment::getTopOfStack()
 
 void Experiment::showStack()
 {
-	cerr << "-- INFO -- Show stack" << endl;
+	if(LogLevel>1) cerr << "-- INFO -- Show stack" << endl;
 	int i=0;
 	if(topOfStack_ != 0) {
 		Particle* current = topOfStack_;
@@ -112,7 +112,7 @@ void Experiment::showStack()
 		cerr << "-- ERROR -- Attempted to show an empty stack !" << endl;
 		exit(EXIT_FAILURE);
 	}
-	cerr << "-- INFO -- there are "<< i << " particles in the stack" << endl;
+	if(LogLevel>1) cerr << "-- INFO -- there are "<< i << " particles in the stack" << endl;
 }
 
 void Experiment::add2stack(Particle* particle)
@@ -138,6 +138,3 @@ void Experiment::removeTopOfStack()
 		exit(EXIT_FAILURE);
 	}
 }
-
-int Particle::n_particles_ = 0; //à déplacer plus tard.
-

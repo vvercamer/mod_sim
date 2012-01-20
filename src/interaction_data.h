@@ -1,6 +1,8 @@
 #ifndef _INTERACTION_DATA_H
 #define _INTERACTION_DATA_H
 
+extern int LogLevel;
+
 static const double Na_Z = 13;
 static const double Na_A = 23;
 static const double I_Z = 53;

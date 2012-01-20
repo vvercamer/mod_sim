@@ -4,6 +4,8 @@
 #include <iostream>
 using namespace std;
 
+extern int LogLevel;
+	
 typedef struct
 {
 	double position [2];

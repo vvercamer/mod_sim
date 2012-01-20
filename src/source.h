@@ -6,10 +6,13 @@
 #include <iostream>
 using namespace std;
 
+extern int LogLevel;
+
 typedef struct
 {
 	double position [2];
 	double energy;
+	int sourceType;
 } sourceParameters;
 
 typedef struct {
@@ -22,6 +25,7 @@ private :
 	gsl_rng* rng_;
 	double energy_;
 	double position_[2];
+	int sourceType_;
 	
 public :
 	Source(gsl_rng * rng, sourceParameters parameters);

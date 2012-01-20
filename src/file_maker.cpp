@@ -28,7 +28,7 @@ int file_maker(int * size, double ** outtable, const string &filename)
 		outfile.close();
 	}
 	else
-		cerr << "Impossible d'ouvrir le fichier !" << endl;
+		cerr << "-- ERROR -- Impossible d'ouvrir le fichier !" << endl;
 	
 	return 0;
 }

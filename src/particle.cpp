@@ -10,25 +10,13 @@ rng_(rng), energy_(energy), theta_(theta)
 {
 	position_[0]=position[0];
 	position_[1]=position[1];
-	n_particles_++;
 }
 
 Particle::~Particle()
 {
-	n_particles_--;
 }
 
 // private functions
-
-void Particle::countParticles()
-{
-	if (n_particles_ < 2) {
-		cerr << "-- INFO -- il y a " << n_particles_ << " particule en mémoire" << endl;
-	}
-	else {
-		cerr << "-- INFO -- il y a " << n_particles_ << " particules en mémoire" << endl;
-	}
-}
 
 Particle * Particle::getNext()
 {
@@ -120,6 +108,11 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 		Shells = I_Shells;
 		probaAuger = I_Auger;
 	}
+	else {
+		cerr << "-- ERROR -- Problem during Photoelectric" << endl;
+		exit(EXIT_FAILURE);
+	}
+		
 		
 	// Determination of the energy of the photoelectron
 	int i=-1;
@@ -135,23 +128,25 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 			electronEnergy = energy_ - Shells[i];
     }
 
-//	result->depositedEnergy = electronEnergy;
+	result->depositedEnergy += electronEnergy;
 
+	AugerFluo(atom,result,Shells,probaAuger,i);
+/*
 	// Auger / Fluo
 	random = uniform_law();
   
 	if (random < probaAuger) {
 		// AUGER
-		cerr << "-- DEBUG -- Auger" << endl;
-		result->depositedEnergy =  energy_;
+		if(LogLevel>2) cerr << "-- DEBUG -- Auger" << endl;
+		result->depositedEnergy += energy_;
     }
 	else{
 		// FLUO
-		cerr << "-- DEBUG -- Fluo " << endl;
+		if(LogLevel>2) cerr << "-- DEBUG -- Fluo " << endl;
       
 		// K alpha
 		if (i == 0) {
-			cerr << " (K alpha) " << endl;
+			if(LogLevel>2) cerr << "-- DEBUG -- (K alpha) " << endl;
 			random = uniform_law();
 			double hnuFluo;
 			if (random <= 0.5)
@@ -164,14 +159,15 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 			result->nParticlesCreated = 1;
 			result->particlesCreated = new void * [result->nParticlesCreated];
 			result->particlesCreated[0] = new Particle(rng_,hnuFluo,theta,position_);
-			result->depositedEnergy =  energy_ - hnuFluo;
+			result->depositedEnergy +=  energy_ - hnuFluo;
 		}
 		// not K
 		else {
-			cerr << endl << "Ignoring fluorescence process (layer with a vacancy =/= K)" << endl;
-			result->depositedEnergy = 0;
+			if(LogLevel>2) cerr << "-- DEBUG -- Ignoring fluorescence process (layer with a vacancy =/= K)" << endl;
+			result->depositedEnergy += 0;
 		}
 	}
+*/
 }
 
 void Particle::AugerFluo(int atom, interactionResult * result, const double * Shells, double probaAuger, int emptyShell)
@@ -188,7 +184,7 @@ void Particle::AugerFluo(int atom, interactionResult * result, const double * Sh
 	if(atom == 1) {
 		if(random < probaAuger) {
 			// AUGER
-			cerr << "-- DEBUG -- Auger" << endl;
+			if(LogLevel>2) cerr << "-- DEBUG -- Auger" << endl;
 
 			if ( emptyShell == 0 ) {
 				random = uniform_law()*3+0.01;
@@ -212,11 +208,11 @@ void Particle::AugerFluo(int atom, interactionResult * result, const double * Sh
 		
 		else {
 			// FLUO
-			cerr << "-- DEBUG -- Fluo " ;
+			if(LogLevel>2) cerr << "-- DEBUG -- Fluo " ;
 
 			// K layer
 			if ( emptyShell == 0 ) {
-				cerr << " (K alpha) " << endl;
+				if(LogLevel>2) cerr << "-- DEBUG -- (K alpha) " << endl;
 				random = uniform_law();
 				double hnuFluo;
 				if (random <= 0.5)
@@ -239,7 +235,7 @@ void Particle::AugerFluo(int atom, interactionResult * result, const double * Sh
 
 			// L layer
 			else if( (emptyShell == 1) || (emptyShell == 2) || (emptyShell == 3)) {
-				cerr << " (L alpha) " << endl;
+				if(LogLevel>2) cerr << "-- DEBUG -- (L alpha) " << endl;
 				double hnuFluo;
 				hnuFluo = I_Shells[emptyShell] - I_Shells[4]; // L alpha
 		
@@ -256,7 +252,7 @@ void Particle::AugerFluo(int atom, interactionResult * result, const double * Sh
 		
 			// M layer
 			else if(emptyShell == 4) {
-				cerr << " (M alpha) " << endl;
+				if(LogLevel>2) cerr << "-- DEBUG -- (M alpha) " << endl;
 				double hnuFluo;
 				hnuFluo = I_Shells[emptyShell]; // M alpha
 		
@@ -287,7 +283,7 @@ void Particle::Compton(interactionResult* result)
 		theta += 2*M_PI;
 		
 	result->nParticlesCreated = 1;
-	result->depositedEnergy = energy_ - comptonEnergy;
+	result->depositedEnergy += energy_ - comptonEnergy;
 	result->particlesCreated = new void * [result->nParticlesCreated];
 	result->particlesCreated[0] = new Particle(rng_,comptonEnergy,theta,position_);
 }
@@ -296,7 +292,7 @@ void Particle::PairProduction(interactionResult* result)
 {
 	double theta=uniform_law()*M_PI;
 	result->nParticlesCreated = 2;
-	result->depositedEnergy = energy_ - 1022;
+	result->depositedEnergy += energy_ - 1022;
 	result->particlesCreated = new void * [result->nParticlesCreated];
 	result->particlesCreated[0] = new Particle(rng_,511,theta,position_);
 	result->particlesCreated[1] = new Particle(rng_,511,theta+M_PI,position_);
@@ -371,26 +367,26 @@ interactionResult Particle::Interaction(double*** data)
 	result.depositedEnergy = 0;
 	
 	int interactionType = selectInteractionType(data);
-	switch (interactionType) {		case 0:			cerr << "-- DEBUG -- Na Compton scattering"<< endl;
+	switch (interactionType) {		case 0:			if(LogLevel>2) cerr << "-- DEBUG -- Na Compton scattering"<< endl;
 			Compton(&result);			break;
 		case 1:
-			cerr << "-- DEBUG -- Na Photoelectric effect"<< endl;
+			if(LogLevel>2) cerr << "-- DEBUG -- Na Photoelectric effect"<< endl;
 			PhotoElectric(0, &result);
 			break;
-		case 2:			cerr << "-- DEBUG -- Na Pair production"<< endl;
+		case 2:			if(LogLevel>2) cerr << "-- DEBUG -- Na Pair production"<< endl;
 			PairProduction(&result);
 			break;
-		case 3:			cerr << "-- DEBUG -- I Compton scattering"<< endl;
+		case 3:			if(LogLevel>2) cerr << "-- DEBUG -- I Compton scattering"<< endl;
 			Compton(&result);			break;
 		case 4:
-			cerr << "-- DEBUG -- I Photoelectric effect"<< endl;
+			if(LogLevel>2) cerr << "-- DEBUG -- I Photoelectric effect"<< endl;
 			PhotoElectric(1, &result);
 			break;
-		case 5:			cerr << "-- DEBUG -- I Pair production"<< endl;	
+		case 5:			if(LogLevel>2) cerr << "-- DEBUG -- I Pair production"<< endl;	
 			PairProduction(&result);
 			break;
 		default:
-			cerr << "-- ERROR -- Problem during selectInteractionType" << endl;
+			if(LogLevel>2) cerr << "-- ERROR -- Problem during selectInteractionType" << endl;
 			exit(EXIT_FAILURE);
 			break;
 			

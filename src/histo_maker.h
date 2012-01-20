@@ -7,6 +7,8 @@
 //#include <gsl/gsl_math.h>
 using namespace std;
 
+extern int LogLevel;
+
 #include <gsl/gsl_histogram.h>
 
 #include "file_maker.h"
