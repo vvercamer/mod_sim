@@ -17,7 +17,7 @@ int initData(double *** data)
 		exit(EXIT_FAILURE);
 		return -1;
 	}
-  
+
 	if(loadData(data[1],"data/I_data.csv") == 0) {
 		if(LogLevel>1) cerr << "-- INFO -- Iodine Data Loading : SUCCESS" << endl;
 	}
@@ -47,6 +47,7 @@ int loadData(double ** dataArray, string dataPath)
 		cout<<"-- ERROR -- Error opening data file ("<< dataPath << ")" << endl;
 		return -1;
 	}
+	
 	
 	int column = 0;
 	int row = 0;

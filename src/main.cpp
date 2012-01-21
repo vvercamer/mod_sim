@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 	sParam.position[0]=0;
 	sParam.position[1]=0;
 	sParam.energy=sourceEnergy;
-	sParam.sourceType=0;
+	sParam.sourceType=22;
 
 	if(LogLevel>1) cerr << "-- INFO -- New experiment" << endl;		
 	Experiment* experiment = new Experiment(sParam, cParam, dParam); //energie 49,5 keV pour le thorium
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 	histo_maker(nEvents,scintillationEnergy,sourceEnergy*1.1);
 	
 	delete[] scintillationEnergy;
-//	delete[] experiment;
+	delete experiment;
 	
 	if(LogLevel>1) cerr << "-- INFO -- The END" << endl;
 	

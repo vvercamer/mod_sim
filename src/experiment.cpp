@@ -15,20 +15,28 @@ Experiment::Experiment(sourceParameters sParam, collimatorParameters cParam, det
 	    for(j = 0; j < nColumns; j++)
 			data[i][j] = new double [nLines];
 	}
-	
+
 	initData(data);
 
 }
 
 Experiment::~Experiment()
 {
+	// Empty the stack (normaly already empty)
 	Particle * particle;
 	while( (particle = topOfStack_) != 0) {		topOfStack_ = particle->getNext();		delete particle;
 	};
+	delete topOfStack_;
 	
+	// Delete the random seed
+	gsl_rng_free(rng_);
+	
+	// Delete the physical components
 	delete detector_;
 	delete source_;
 	delete collimator_;
+	
+	// Delete the 
 	
 	// Deleting Interaction Data
 	int i,j = 0;
@@ -42,6 +50,7 @@ Experiment::~Experiment()
 	}
 	delete [] data;
 	data = 0;
+
 }
 
 //void Experiment::StartOfRun(int argc, char * argv[])
@@ -59,11 +68,11 @@ double Experiment::event(int sourceType)
 	if(LogLevel>2) cerr << "\n-- DEBUG -- New event" << endl;	
 	double scintillationEnergy = 0;
 
-	sourceEmission emission =  source_ -> emitParticle(sourceType);
+	sourceEmission emission = source_->emitParticle(sourceType);
 	for(int i=0; i < emission.nParticlesEmitted; i++) {
 		add2stack(emission.particlesEmitted[i]);
-		delete emission.particlesEmitted;
 	}
+	delete[] emission.particlesEmitted;
 
 	while (topOfStack_ != 0){
 		Particle* current = topOfStack_;
@@ -77,9 +86,10 @@ double Experiment::event(int sourceType)
 			interactionResult result = current->Interaction(data);
 			scintillationEnergy += result.depositedEnergy;
 		// Adding to the stack the particles resulting from previous interaction
-			for (int i=0; i < result.nParticlesCreated; i++)
+			for (int i=0; i < result.nParticlesCreated; i++) {
 				add2stack((Particle*)result.particlesCreated[i]);
-				delete result.particlesCreated;
+			}
+			delete[] result.particlesCreated;
 		}
 		
 		delete current;
