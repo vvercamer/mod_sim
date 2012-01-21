@@ -112,7 +112,7 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 		cerr << "-- ERROR -- Problem during Photoelectric" << endl;
 		exit(EXIT_FAILURE);
 	}
-		
+
 		
 	// Determination of the energy of the photoelectron
 	int i=-1;
@@ -396,5 +396,6 @@ interactionResult Particle::Interaction(double*** data)
 //	result.particlesCreated[0] = new Particle(rng_,25);
 	return result;
 }
+
 
 

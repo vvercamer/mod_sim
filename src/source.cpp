@@ -12,6 +12,9 @@ rng_(rng), energy_(parameters.energy), sourceType_(parameters.sourceType)
 		case 22: 
 			if(LogLevel>1) cerr << "-- INFO -- You are using a 22Na source" << endl;
 			break;
+		case 60:
+			if(LogLevel>1) cerr << "-- INFO -- You are using a 60Co source" << endl;
+			break;
 		default:
 			cerr << "-- ERROR -- sourceType : " << sourceType_ << " is unknown !!!" << endl;
 			exit(EXIT_FAILURE);
@@ -58,9 +61,19 @@ sourceEmission Source::emitParticle(int sourceType)
 			}
 			break;
 		}
+		
+		case 60: {
+			emission.nParticlesEmitted = 2;
+			emission.particlesEmitted = new Particle * [emission.nParticlesEmitted];
+			double theta1 = uniform_law()*2*M_PI;
+			double theta2 = uniform_law()*2*M_PI;
+			emission.particlesEmitted[0] = new Particle(rng_,1173.2,theta1,position_);
+			emission.particlesEmitted[1] = new Particle(rng_,1332.5,theta2,position_);
+			break;
+		}
 	
 		default:
-			cerr << "-- ERROR -- sourceType : "<< sourceType << " is unknown !!!" << endl;
+			cerr << "-- ERROR -- sourceType : "<< sourceType << " is unknown !!" << endl;
 			exit(EXIT_FAILURE);
 	}
 	return emission;

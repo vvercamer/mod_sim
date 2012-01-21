@@ -102,7 +102,7 @@ double Experiment::event(int sourceType)
 	if(LogLevel>2) cerr << "-- DEBUG -- Collected charges : " << detector_->photomultiplication(detector_->scintillation(scintillationEnergy)) << endl;
 	
 	double Fano=0.21;
-	return (scintillationEnergy + gsl_ran_gaussian(rng_, sqrt(scintillationEnergy)*Fano));
+	return (scintillationEnergy + gsl_ran_gaussian(rng_, sqrt(scintillationEnergy*Fano)));
 }
 
 Particle * Experiment::getTopOfStack()
