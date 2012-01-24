@@ -29,10 +29,12 @@ int initData(double *** data)
   
 	for(int i = 0; i < nLines; i++) {
 		data[0][4][i] = (Na_A*(data[0][1][i]+data[0][2][i]+data[0][3][i])+I_A*(data[1][1][i]+data[1][2][i]+data[1][3][i]))/(Na_A+I_A);
+
 		if (data[0][4][i] <= 0) {
 			cerr << "-- ERROR -- Problem during total cross section calculation" << endl;
 				exit(EXIT_FAILURE);
 		}
+		
 	}
   
   return 0;

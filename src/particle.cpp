@@ -33,17 +33,18 @@ int Particle::selectInteractionType(double*** data)
 	int interactionType;
 	double cNa, peNa, ppNa, cI, peI, ppI;
 	double dataNorm=0;
-	int idxData=0;
-	while (energy_ > data[0][0][idxData] && idxData < (nLines-1)) {
-		idxData++;
+	int idxData = nLines-1;
+	while (energy_ < data[0][0][idxData] && idxData > 0) {
+		idxData--;
 	}
-	dataNorm = data[0][4][idxData];
-//	dataNorm = (Na_A*(data[0][1][idxData]+data[0][2][idxData]+data[0][3][idxData])+I_A*(data[1][1][idxData]+data[1][2][idxData]+data[1][3][idxData]))/(Na_A+I_A);
+
+	dataNorm = (Na_A*(data[0][1][idxData]+data[0][2][idxData]+data[0][3][idxData])+I_A*(data[1][1][idxData]+data[1][2][idxData]+data[1][3][idxData]))/(Na_A+I_A);
+
 	if (dataNorm <= 0) {
 		cerr << "-- ERROR -- Problem during selectInteractionType" << endl;
 		exit(EXIT_FAILURE);
 	}
-		
+
 	cNa = Na_A*data[0][1][idxData]/(Na_A+I_A);
 	peNa = Na_A*data[0][2][idxData]/(Na_A+I_A);
 	ppNa = Na_A*data[0][3][idxData]/(Na_A+I_A);
@@ -51,18 +52,18 @@ int Particle::selectInteractionType(double*** data)
 	peI = I_A*data[1][2][idxData]/(Na_A+I_A);
 	ppI = I_A*data[1][3][idxData]/(Na_A+I_A);
 	
-	/* //for debug
+/*	 //for debuging
 	cerr << "dataNorm : " << dataNorm <<endl;
 	cerr << "sum p : " << (peNa+cNa+ppNa+cI+peI+ppI) <<endl;
 	cerr << "NRJ " << energy_ << "keV" << endl;
 	cerr << "data[0][0]["<<idxData<<"] : " << data[0][0][idxData] << "keV" <<endl;
-	cerr << "cNa : " << cNa/dataNorm <<endl;
-	cerr << "peNa : " << peNa/dataNorm <<endl;
-	cerr << "ppNa : " << ppNa/dataNorm <<endl;
-	cerr << "cI : " << cI/dataNorm <<endl;
-	cerr << "peI : " << peI/dataNorm <<endl;
-	cerr << "ppI : " << ppI/dataNorm <<endl;
-	*/
+	cerr << "cNa : " << cNa <<endl;
+	cerr << "peNa : " << peNa <<endl;
+	cerr << "ppNa : " << ppNa <<endl;
+	cerr << "cI : " << cI <<endl;
+	cerr << "peI : " << peI <<endl;
+	cerr << "ppI : " << ppI <<endl;
+*/	
 	
 	double x = uniform_law()*dataNorm;
 			
@@ -92,7 +93,6 @@ int Particle::selectInteractionType(double*** data)
 }
 
 double compton_distrib(double x,double ksi) {
-//	double r=2.81794092e-15;pow(r,2)*
 	return 1/pow(1+ksi*(1-cos(x)),2)*(1+pow(cos(x),2)+pow(ksi*(1-cos(x)),2)/(1+ksi*(1-cos(x))))/2;
 }
 
@@ -128,9 +128,9 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 			electronEnergy = energy_ - Shells[i];
     }
 
-	result->depositedEnergy += electronEnergy;
+	result->depositedEnergy = energy_;// electronEnergy;
 
-	AugerFluo(atom,result,Shells,probaAuger,i);
+//	AugerFluo(atom,result,Shells,probaAuger,i);
 /*
 	// Auger / Fluo
 	random = uniform_law();
@@ -212,14 +212,16 @@ void Particle::AugerFluo(int atom, interactionResult * result, const double * Sh
 
 			// K layer
 			if ( emptyShell == 0 ) {
-				if(LogLevel>2) cerr << "-- DEBUG -- (K alpha) " << endl;
 				random = uniform_law();
 				double hnuFluo;
-				if (random <= 0.5)
+				if (random <= 0.5) {
+					if(LogLevel>2) cerr << "-- DEBUG -- (K alpha1) " << endl;
 					hnuFluo = I_Shells[0] - I_Shells[2]; // K alpha 1
-				else
+				}
+				else {
+					if(LogLevel>2) cerr << "-- DEBUG -- (K alpha2) " << endl;
 					hnuFluo = I_Shells[0] - I_Shells[3]; // K alpha 2
-		
+				}
 		
 				double theta=uniform_law()*2*M_PI;
 		
@@ -272,25 +274,25 @@ void Particle::AugerFluo(int atom, interactionResult * result, const double * Sh
 
 void Particle::Compton(interactionResult* result)
 {
-	double ksi=energy_/511; // 511keV electron energy
-	double thetaCompton=sign_rand()*parametric_arbitrary_law(compton_distrib,ksi,0,M_PI,1);
+	double ksi = energy_/511; // 511keV electron energy
+	double thetaCompton = sign_rand()*parametric_arbitrary_law(compton_distrib,ksi,0,M_PI,1);
 	double comptonEnergy = energy_/(1+ksi*(1-cos(thetaCompton))); 
 	
-	double theta=theta_ + thetaCompton;
-	while (theta>2*M_PI)
+	double theta =  thetaCompton - theta_;
+/*	while (theta>2*M_PI)
 		theta -= 2*M_PI;
 	while (theta<0)
 		theta += 2*M_PI;
-		
+*/
 	result->nParticlesCreated = 1;
-	result->depositedEnergy += energy_ - comptonEnergy;
+	result->depositedEnergy = energy_ - comptonEnergy;
 	result->particlesCreated = new void * [result->nParticlesCreated];
 	result->particlesCreated[0] = new Particle(rng_,comptonEnergy,theta,position_);
 }
 
 void Particle::PairProduction(interactionResult* result)
 {
-	double theta=uniform_law()*M_PI;
+	double theta = uniform_law()*M_PI;
 	result->nParticlesCreated = 2;
 	result->depositedEnergy += energy_ - 1022;
 	result->particlesCreated = new void * [result->nParticlesCreated];
@@ -303,18 +305,19 @@ void Particle::PairProduction(interactionResult* result)
 double Particle::Propagation(Collimator* collimator, Detector* detector, double*** data)
 {
 	//Propagation	--------	
-	int idxData = 0;
-	double mu = 0;
-	while (energy_ > data[0][0][idxData] && idxData < (nLines-1)) {
-		idxData++;
+	int idxData = nLines-1;
+	while (energy_ < data[0][0][idxData] && idxData > 0 ) {
+		idxData--;
 	}
-
-	if ((mu = detector->getDensity() * data[0][4][idxData] * 100) == 0) { // en m-1
+	
+	double mu = detector->getDensity() * data[0][4][idxData];
+	if (mu == 0) { // en cm-1
 		cerr << "-- ERROR -- Attempted to divide by ZERO (mu = 1/lambda) !" << endl;
 		exit(EXIT_FAILURE);
 	}
 	
-	double L = gsl_ran_exponential(rng_, 1/mu);
+	double L = exp_rand(mu); 
+//	double L = gsl_ran_exponential(rng_, 1/mu);
 	
 	if ((detector->isIn(position_[0],position_[1])) && (detector->isIn(position_[0]+L*cos(theta_),position_[1]+L*sin(theta_)))) {
 		position_[0] += L*cos(theta_);
@@ -327,7 +330,7 @@ double Particle::Propagation(Collimator* collimator, Detector* detector, double*
 	}
 	// else if particle is not in the detector
 	else {
-		if(cos(theta_) == 0)
+		if(cos(theta_) <= 0)
 			return 0;
 		
 		double yIntersec = 0;
@@ -350,10 +353,34 @@ double Particle::Propagation(Collimator* collimator, Detector* detector, double*
 					 || (yIntersec > (detector->getY() + (detector->getDiameter())/2)))) {
 			return 0;
 		}
-		// finally, if particle reaches detector !
-		position_[0] = detector->getX();
-		position_[1] = yIntersec;
-		return 1;
+		
+		if (detector->isIn(detector->getX() - detector->getWidth()/2,
+			position_[1]+(detector->getX() - detector->getWidth() - position_[0])*tan(theta_)) == 1) {
+			position_[0] = detector->getX() - detector->getWidth()/2;
+			position_[1] = position_[1] + (detector->getX() - detector->getWidth() - position_[0])*tan(theta_);
+			return 2;
+		}
+		else if (detector->isIn(detector->getX() + detector->getWidth()/2,
+			position_[1]+(detector->getX() + detector->getWidth() - position_[0])*tan(theta_)) == 1) {
+			position_[0] = detector->getX() + detector->getWidth()/2;
+			position_[1] = position_[1]+(detector->getX() + detector->getWidth() - position_[0])*tan(theta_);
+			return 2;
+		}
+		else if (detector->isIn(position_[0]+(detector->getY() - detector->getDiameter()/2 - position_[1])/tan(theta_),
+			detector->getY() - detector->getDiameter()/2) == 1) {
+			position_[0] = position_[0] + (detector->getY() - detector->getDiameter()/2 - position_[1])/tan(theta_);
+			position_[1] = detector->getY() - detector->getDiameter()/2 == 1;
+			return 2;
+		}
+		else if (detector->isIn(position_[0]+(detector->getY() + detector->getDiameter()/2 - position_[1])/tan(theta_),
+			detector->getY() + detector->getDiameter()/2) == 1) {
+			position_[0] = position_[0] + (detector->getY() + detector->getDiameter()/2 - position_[1])/tan(theta_);
+			position_[1] = detector->getY() + detector->getDiameter()/2 ;
+			return 2;
+		}
+		else {
+			return 0;
+		}
 	}
 }
 
@@ -391,9 +418,7 @@ interactionResult Particle::Interaction(double*** data)
 			break;
 			
 	}
-	
-//	result.particlesCreated = new void * [result.nParticlesCreated];
-//	result.particlesCreated[0] = new Particle(rng_,25);
+
 	return result;
 }
 

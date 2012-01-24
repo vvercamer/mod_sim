@@ -3,7 +3,8 @@
 set datafile separator ";"
 #set logscale xy
 #plot [] [:20]'proba.csv' using 1:2 title "photoelectrique" with lines, '' using 1:3 title "compton"  with lines, '' using 1:4 title "creation de paires"  with lines
-set term aqua
 set nokey
+#set term aqua
+#unset logscale; set logscale y
 plot "histo_result.csv" using 1:2 with lines
 #pause -1

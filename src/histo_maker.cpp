@@ -60,6 +60,7 @@ void histo_maker(int n, double* omega, double hmax)
 		
 	delete [] outtable2;
 	*/
+	
 	for( i=0 ; i < nbhist ; i++ )
 		delete [] outtable[i];
 		

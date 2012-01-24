@@ -55,14 +55,16 @@ int main(int argc, char *argv[])
 	detectorParameters dParam;
 	sourceParameters sParam;
 
-	cParam.position[0]=0.01;
-	cParam.position[1]=0;
-	cParam.diameter=0.02;
+// en cm
 
-	dParam.position[0]=0.04;
+	cParam.position[0]=-1.5;
+	cParam.position[1]=0;
+	cParam.diameter=2.5;
+
+	dParam.position[0]=3;
 	dParam.position[1]=0;
-	dParam.diameter=0.05;
-	dParam.width=0.05;
+	dParam.diameter=7.6;
+	dParam.width=7.6;
 	
 	sParam.position[0]=0;
 	sParam.position[1]=0;
@@ -74,16 +76,18 @@ int main(int argc, char *argv[])
 
 	if(LogLevel>1) cerr << "-- INFO -- Starting for " << nEvents << " events" << endl;		
 	for (i=0; i<nEvents; i++){
-		scintillationEnergy[i]=experiment->event(sParam.sourceType);
+		scintillationEnergy[i]= experiment->event(sParam.sourceType);
 	}
 	
+
+
 	if(LogLevel>1) cerr << "-- INFO -- Making the output files" << endl;
 
 	if (sParam.sourceType == 22)
-		sourceEnergy = 1275;
+		sourceEnergy = 1675;
 
 	if (sParam.sourceType == 60)
-		sourceEnergy = 1332.5;
+		sourceEnergy = 2350;
 
 	histo_maker(nEvents,scintillationEnergy,sourceEnergy*1.1);
 	

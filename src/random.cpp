@@ -67,6 +67,12 @@ double parametric_arbitrary_law(double (*distribution)(double x, double p), doub
 	return v;
 }
 
+double exp_rand(double param)
+{
+  double random = -1 * 1/param * gsl_sf_log(uniform_law());
+  return random;
+}
+
 double sign_rand()
 {
 	double x = uniform_law()-0.5;
@@ -74,11 +80,4 @@ double sign_rand()
 	else return -1;
 }
 
-//double gaussian_law	
-
-
-//double exponential_law (int n)
-//{
-//	
-//}
 //double gsl_ran_exponential (const gsl rng * r, double mu)

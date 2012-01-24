@@ -76,13 +76,17 @@ double Experiment::event(int sourceType)
 
 	while (topOfStack_ != 0){
 		Particle* current = topOfStack_;
-		//showStack();
+	//	showStack();
 
 	//	cerr << "-- DEBUG -- Taking care of particle " << current << " energy : " << current->getEnergy() << endl;
 		removeTopOfStack();
-		//current->countParticles();
-
-		if (current->Propagation(collimator_,detector_,data) == 1) {
+		int propagationResult = current->Propagation(collimator_,detector_,data);
+		
+		if (propagationResult == 2) {
+			propagationResult = current->Propagation(collimator_,detector_,data);
+		}
+		
+		if (propagationResult == 1) {
 			interactionResult result = current->Interaction(data);
 			scintillationEnergy += result.depositedEnergy;
 		// Adding to the stack the particles resulting from previous interaction
@@ -94,8 +98,6 @@ double Experiment::event(int sourceType)
 		
 		delete current;
 		current = 0;
-		
-
 
 	}
 	if(LogLevel>2) cerr << "-- DEBUG -- Deposited energy : " << scintillationEnergy << " keV" << endl;
@@ -103,6 +105,7 @@ double Experiment::event(int sourceType)
 	
 	double Fano=0.21;
 	return (scintillationEnergy + gsl_ran_gaussian(rng_, sqrt(scintillationEnergy*Fano)));
+//	return scintillationEnergy;
 }
 
 Particle * Experiment::getTopOfStack()

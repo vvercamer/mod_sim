@@ -27,8 +27,8 @@ double Detector::photomultiplication(double nPhotons)
 
 int Detector::isIn(double x, double y)
 {
-	if (( x > (position_[0]-width_/2)) && ( x < (position_[0]+width_/2)) &&
-		( y > (position_[1]-diameter_/2)) && ( y < (position_[1]+diameter_/2)))
+	if (( x >= (position_[0]-width_/2)) && ( x <= (position_[0]+width_/2)) &&
+		( y >= (position_[1]-diameter_/2)) && ( y <= (position_[1]+diameter_/2)))
 		return 1;
 	else
 		return 0;

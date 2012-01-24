@@ -44,20 +44,19 @@ Double_t fitFunction51(Double_t *x, Double_t *par) {
 /* Main Program */
 int main(int argc, char * argv[])
 { 
-	if (argc == 2) {
+	if (argc == 3) {
 	}
 	else{
-		cerr << "-- ERROR -- Proper use is ./simulation <filename> " << endl;
+		cerr << "-- ERROR -- Proper use is ./simulation <filename> <maxEnergy> " << endl;
 		exit(EXIT_FAILURE);
 	}
 	
-	string s;
-	s = argv[1];
+	string s = argv[1];
 	char *a=new char[s.size()+1];
 	a[s.size()]=0;
 	memcpy(a,s.c_str(),s.size());
-
-	//char **a = argv;
+	
+	double maxEnergy = atof(argv[2]);
 	
 	// Welcome message
 	cerr << "\n== DATA POST-PROCESSING - CMI 2011-2012 ==\n" << endl;
@@ -77,9 +76,9 @@ int main(int argc, char * argv[])
 	canvas->cd();
 	canvas->Update();
 	
-	histo  = new TH1F("histo","Distribution de la charge", 500, 0, 100);
+	histo  = new TH1F("histo","Distribution de la charge", 500, 0.1, maxEnergy);
 	
-	cerr<<a<<endl;
+	cerr<< a <<endl;
 
 	
 	ifstream file(a,ios::in);
@@ -92,6 +91,8 @@ int main(int argc, char * argv[])
 		file.close();
 	}  
 	
+	cerr<<"histo filled"<<endl;
+
 	
 	/*  int i=0;
 	for(i=0;i<10000;i++)
