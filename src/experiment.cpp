@@ -78,10 +78,10 @@ double Experiment::event(int sourceType)
 		Particle* current = topOfStack_;
 	//	showStack();
 
-	//	cerr << "-- DEBUG -- Taking care of particle " << current << " energy : " << current->getEnergy() << endl;
+		if(LogLevel>2) cerr << "-- DEBUG -- Taking care of particle " << current << " energy : " << current->getEnergy() << endl;
 		removeTopOfStack();
 		int propagationResult = current->Propagation(collimator_,detector_,data);
-		
+
 		if (propagationResult == 2) {
 			propagationResult = current->Propagation(collimator_,detector_,data);
 		}
@@ -89,13 +89,14 @@ double Experiment::event(int sourceType)
 		if (propagationResult == 1) {
 			interactionResult result = current->Interaction(data);
 			scintillationEnergy += result.depositedEnergy;
+	
 		// Adding to the stack the particles resulting from previous interaction
 			for (int i=0; i < result.nParticlesCreated; i++) {
 				add2stack((Particle*)result.particlesCreated[i]);
 			}
 			delete[] result.particlesCreated;
 		}
-		
+	
 		delete current;
 		current = 0;
 

@@ -52,8 +52,8 @@ int Particle::selectInteractionType(double*** data)
 	peI = I_A*data[1][2][idxData]/(Na_A+I_A);
 	ppI = I_A*data[1][3][idxData]/(Na_A+I_A);
 	
-/*	 //for debuging
-	cerr << "dataNorm : " << dataNorm <<endl;
+	 //for debuging
+/*	cerr << "dataNorm : " << dataNorm <<endl;
 	cerr << "sum p : " << (peNa+cNa+ppNa+cI+peI+ppI) <<endl;
 	cerr << "NRJ " << energy_ << "keV" << endl;
 	cerr << "data[0][0]["<<idxData<<"] : " << data[0][0][idxData] << "keV" <<endl;
@@ -66,30 +66,30 @@ int Particle::selectInteractionType(double*** data)
 */	
 	
 	double x = uniform_law()*dataNorm;
-			
-		if (x>0 && x<=cNa) {
-			interactionType=0;//Compton Na
-		}
-		else if (x>cNa && x<=(cNa+peNa)) {
-			interactionType=1;//Photoelectric Na
-		}
-		else if (x>(cNa+peNa) && x<=(cNa+peNa+ppNa)) {
-			interactionType=2;//Pair Production Na
-		}
-		else if (x>(cNa+peNa+ppNa) && x<=(cNa+peNa+ppNa+cI)) {
-			interactionType=3;//Compton I
-		}
-		else if (x>(cNa+peNa+ppNa+cI) && x<=(peNa+cNa+ppNa+cI+peI)) {
-			interactionType=4;//Photoelectric I
-		}
-		else if (x>(cNa+peNa+ppNa+cI+peI) && x<=dataNorm) {
-			interactionType=5;//Pair Production I
-		}
-		else {
-			cerr << "-- ERROR -- Problem during selectInteractionType" << endl;
-			exit(EXIT_FAILURE);
-		}
-		return interactionType;
+		
+	if (x>=0 && x<=cNa) {
+		interactionType=0;//Compton Na
+	}
+	else if (x>cNa && x<=(cNa+peNa)) {
+		interactionType=1;//Photoelectric Na
+	}
+	else if (x>(cNa+peNa) && x<=(cNa+peNa+ppNa)) {
+		interactionType=2;//Pair Production Na
+	}
+	else if (x>(cNa+peNa+ppNa) && x<=(cNa+peNa+ppNa+cI)) {
+		interactionType=3;//Compton I
+	}
+	else if (x>(cNa+peNa+ppNa+cI) && x<=(peNa+cNa+ppNa+cI+peI)) {
+		interactionType=4;//Photoelectric I
+	}
+	else if (x>(cNa+peNa+ppNa+cI+peI) && x<=dataNorm) {
+		interactionType=5;//Pair Production I
+	}
+	else {
+		cerr << "-- ERROR -- Problem during selectInteractionType" << endl;
+		exit(EXIT_FAILURE);
+	}
+	return interactionType;
 }
 
 double compton_distrib(double x,double ksi) {
@@ -128,11 +128,11 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 			electronEnergy = energy_ - Shells[i];
     }
 
-	result->depositedEnergy = energy_;// electronEnergy;
+	result->depositedEnergy = electronEnergy;
 
-//	AugerFluo(atom,result,Shells,probaAuger,i);
+	AugerFluo(atom,result,Shells,probaAuger,i);
 /*
-	// Auger / Fluo
+	// Auger / Fluo ANCIENNE VERSION
 	random = uniform_law();
   
 	if (random < probaAuger) {
@@ -277,14 +277,22 @@ void Particle::Compton(interactionResult* result)
 	double ksi = energy_/511; // 511keV electron energy
 	double thetaCompton = sign_rand()*parametric_arbitrary_law(compton_distrib,ksi,0,M_PI,1);
 	double comptonEnergy = energy_/(1+ksi*(1-cos(thetaCompton))); 
-	
-	double theta =  thetaCompton - theta_;
+
+
+
+	double theta = theta_ + thetaCompton;
 /*	while (theta>2*M_PI)
 		theta -= 2*M_PI;
 	while (theta<0)
 		theta += 2*M_PI;
 */
-	result->nParticlesCreated = 1;
+
+	if (thetaCompton >= 0) {
+		result->nParticlesCreated = 1;
+	}
+	else {
+		result->nParticlesCreated = 0;
+	}
 	result->depositedEnergy = energy_ - comptonEnergy;
 	result->particlesCreated = new void * [result->nParticlesCreated];
 	result->particlesCreated[0] = new Particle(rng_,comptonEnergy,theta,position_);
