@@ -128,46 +128,9 @@ void Particle::PhotoElectric(int atom, interactionResult * result)
 			electronEnergy = energy_ - Shells[i];
     }
 
-	result->depositedEnergy = electronEnergy;
+	result->depositedEnergy += electronEnergy;
 
 	AugerFluo(atom,result,Shells,probaAuger,i);
-/*
-	// Auger / Fluo ANCIENNE VERSION
-	random = uniform_law();
-  
-	if (random < probaAuger) {
-		// AUGER
-		if(LogLevel>2) cerr << "-- DEBUG -- Auger" << endl;
-		result->depositedEnergy += energy_;
-    }
-	else{
-		// FLUO
-		if(LogLevel>2) cerr << "-- DEBUG -- Fluo " << endl;
-      
-		// K alpha
-		if (i == 0) {
-			if(LogLevel>2) cerr << "-- DEBUG -- (K alpha) " << endl;
-			random = uniform_law();
-			double hnuFluo;
-			if (random <= 0.5)
-				hnuFluo = I_Shells[0] - I_Shells[2]; // K alpha 1
-			else
-				hnuFluo = I_Shells[0] - I_Shells[3]; // K alpha 2
-			
-			double theta=uniform_law()*2*M_PI;
-				
-			result->nParticlesCreated = 1;
-			result->particlesCreated = new void * [result->nParticlesCreated];
-			result->particlesCreated[0] = new Particle(rng_,hnuFluo,theta,position_);
-			result->depositedEnergy +=  energy_ - hnuFluo;
-		}
-		// not K
-		else {
-			if(LogLevel>2) cerr << "-- DEBUG -- Ignoring fluorescence process (layer with a vacancy =/= K)" << endl;
-			result->depositedEnergy += 0;
-		}
-	}
-*/
 }
 
 void Particle::AugerFluo(int atom, interactionResult * result, const double * Shells, double probaAuger, int emptyShell)
@@ -289,13 +252,18 @@ void Particle::Compton(interactionResult* result)
 
 	if (thetaCompton >= 0) {
 		result->nParticlesCreated = 1;
+		result->particlesCreated = new void * [result->nParticlesCreated];
+		result->particlesCreated[0] = new Particle(rng_,comptonEnergy,theta,position_);
 	}
 	else {
 		result->nParticlesCreated = 0;
 	}
-	result->depositedEnergy = energy_ - comptonEnergy;
-	result->particlesCreated = new void * [result->nParticlesCreated];
-	result->particlesCreated[0] = new Particle(rng_,comptonEnergy,theta,position_);
+	result->depositedEnergy += energy_ - comptonEnergy;
+	
+	/*if (uniform_law() < 0.3){
+		result->depositedEnergy = 0;
+	}
+	*/
 }
 
 void Particle::PairProduction(interactionResult* result)
@@ -403,7 +371,8 @@ interactionResult Particle::Interaction(double*** data)
 	
 	int interactionType = selectInteractionType(data);
 	switch (interactionType) {		case 0:			if(LogLevel>2) cerr << "-- DEBUG -- Na Compton scattering"<< endl;
-			Compton(&result);			break;
+			Compton(&result);
+			break;
 		case 1:
 			if(LogLevel>2) cerr << "-- DEBUG -- Na Photoelectric effect"<< endl;
 			PhotoElectric(0, &result);
@@ -415,7 +384,7 @@ interactionResult Particle::Interaction(double*** data)
 			Compton(&result);			break;
 		case 4:
 			if(LogLevel>2) cerr << "-- DEBUG -- I Photoelectric effect"<< endl;
-			PhotoElectric(1, &result);
+			PhotoElectric(1, &result);			
 			break;
 		case 5:			if(LogLevel>2) cerr << "-- DEBUG -- I Pair production"<< endl;	
 			PairProduction(&result);
@@ -423,8 +392,7 @@ interactionResult Particle::Interaction(double*** data)
 		default:
 			if(LogLevel>2) cerr << "-- ERROR -- Problem during selectInteractionType" << endl;
 			exit(EXIT_FAILURE);
-			break;
-			
+			break;		
 	}
 
 	return result;

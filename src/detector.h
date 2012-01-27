@@ -39,6 +39,7 @@ public :
 	double getY(){return position_[1];};
 	double getDiameter() {return diameter_;};
 	double getWidth() {return width_;};
+	double getEfficiency() {return efficiency_;};
 
 };
 

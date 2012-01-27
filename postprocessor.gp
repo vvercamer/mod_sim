@@ -7,5 +7,6 @@ set nokey
 set term aqua
 #set logscale xy
 #unset logscale; set logscale y
+#plot "../CR-mod_sim/images/histo_result-n100M-E662keV.csv" using 1:2 with lines
 plot "histo_result.csv" using 1:2 with lines
 #pause -1
