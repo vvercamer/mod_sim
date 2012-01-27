@@ -76,7 +76,7 @@ double exp_rand(double param)
 double sign_rand()
 {
 	double x = uniform_law()-0.5;
-	if (x > 0) return 1;
+	if (x >= 0) return 1;
 	else return -1;
 }
 
