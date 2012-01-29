@@ -98,14 +98,15 @@ int main(int argc, char * argv[])
 	for(i=0;i<10000;i++)
 	histo->Fill(10,1.);
 	*/
-	
-	TF1 *fitFcn = new TF1("fitFcn",fitFunction51,0.,100.,6);
+
+/*	
+	TF1 *fitFcn = new TF1("fitFcn",fitFunction51,600.,700.,6);
 	fitFcn->SetNpx(500);
 	fitFcn->SetLineWidth(1);
 	fitFcn->SetLineColor(kMagenta);
-	fitFcn->SetParameters(50,1.,2.,500,49,1.);
+	fitFcn->SetParameters(700,100.,200.,500,600,1.);
 	histo->Fit("fitFcn","R");
-	
+*/	
 	histo->Draw("E");
 	
 	theApp->Run();

@@ -3,51 +3,53 @@
 by Vincent V
 
 I. Utilisation
-./simulation
+./simulation.sh
+Certains paramètres de simulation sont modifiable dans ce script
 
-II. Explications
-II.1. Les différents fichiers
-II.1.1 main
+II. Les différents fichiers
+II.1 main
 corps du programme
 
-II.1.2 experiment
+II.2 experiment
 création et déroulement de l'expérience
 
-II.1.3 random
+II.3 random
 définition des générateurs aléatoires
 
-II.1.4 source
+II.4 source
 définition de la source
 
-II.1.5 particle
+II.5 particle
 définition des particules
 
-II.1.6 collimator
+II.6 collimator
 Définition du collimateur
 
-II.1.7 enclosure
+II.7 enclosure
 Définition de l'enceinte du détecteur
 
-II.1.8 detector
+II.8 detector
 définition du détecteur
 
-II.1.9 file_maker
-créer les fichiers de sortie
+II.9 interaction_data
+chargements des données de l'experience et définition de certains paramètres physiques
 
-II.2. Les différentes classes
-II.2.1. Experimement
+II.10 histo_maker
+création des histogrammes
 
-Experiment::StartOfRun() : fonction qui n’est appelée qu’une seul fois au cours de l’exécution du programme. Elle sert à l’initialisation des variables globale et à la création de quelques instances de classes qui sont produites de façon unique lors de la simulation. C’est le cas de la source.
+II.11 file_maker
+création des fichiers de sortie
 
-Experiment::Event() : fonction appelée pour chaque événement engendré par l’émission d’une particule de la source. créé la particule primaire émise par la classe source à chaque événement. Cette donnée permet par la suite de gérer toutes les particules qui seront produites dans la traversée du détecteur par la particule primaire.
+III. Post traitement
+Le programme crée deux fichiers de sortie au format CSV :
+*** histo_result.csv : l'histogramme du nombre d'événements en fonction de l'energie.
+première colonne : énergie.
+deuxième colonne : nombre d'événements
 
-II.2.2. Source
-Particle* Source::Init(void) : créé la première particule d'une expérience
+le graph est tracé avec gnuplot grace au script gnuplot : postprocessing.gp
 
+*** raw_result.csv
+Dans le fichier file_maker.cpp il est possible de commenter le morceau de code permettant de créer ce second fichier de sortie CSV à une seule colonne contenant la charge déposée.
 
-II.2.3. Particle
-double Particle::Parcours(void) : ?
+On peut alors utiliser le programme postprocessing, qui utilise ROOT pour tracer et représenter l'histogramme à partir de raw_result.csv
 
-void Particle::Propagation(void) : estime le parcours d'une particule dans le milieu en fonction de son type.
-
-void Particle::Interaction(void) : est invoquée après la propagation de la particule pour décrire l’interaction qui se produira à la fin du parcours de la particule.
