@@ -41,8 +41,6 @@ int main(int argc, char *argv[])
 	double sourceEnergy = 662; //en keV
 	int sourceType = 0;
 
-	cerr << LogLevel<<endl;
-
 	if (argc == 5) {
 		nEvents = atoi(argv[1]);
 		sourceEnergy = atof(argv[2]); 	//en keV
