@@ -1,12 +1,10 @@
 # Input file contains comma-separated values fields
+
 set datafile separator ";"
-#plot [] [:20]'proba.csv' using 1:2 title "photoelectrique" with lines, '' using 1:3 title "compton"  with lines, '' using 1:4 title "creation de paires"  with lines
 set xlabel "Energie (keV)"
 set ylabel "Nombre d'événements"
 set nokey
-set term aqua
-#set logscale xy
-#unset logscale; set logscale y
-#plot "../CR-mod_sim/images/histo_result-n100M-E662keV.csv" using 1:2 with lines
+#set term aqua
+#set logscale y
+#plot "../CR-mod_sim/images/histo_result-n100M-60Co.csv" using 1:2 with lines
 plot "histo_result.csv" using 1:2 with lines
-#pause -1

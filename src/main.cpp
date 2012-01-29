@@ -38,14 +38,25 @@ int main(int argc, char *argv[])
 	int i;	
 
 	int nEvents = 1;
-	double sourceEnergy = 49.5; //en keV
+	double sourceEnergy = 662; //en keV
+	int sourceType = 0;
 
-	if (argc == 3) {
+	cerr << LogLevel<<endl;
+
+	if (argc == 5) {
 		nEvents = atoi(argv[1]);
-		sourceEnergy = atof(argv[2]); //en keV
+		sourceEnergy = atof(argv[2]); 	//en keV
+		sourceType = atoi(argv[3]); 	// 0 22 ou 60
+		LogLevel = atoi(argv[4]); 		// 0 1 2 ou 3
 	}
-	else if (argc != 3 && argc != 1) {
-		cerr << "-- ERROR -- Proper use is ./simulation OR ./simulation <nEvents> <sourceEnergy (keV)> " << endl;
+	
+	else if (argc != 5 && argc != 1) {
+		cerr << "-- ERROR -- Proper use is ./simulation OR ./simulation <nEvents> <sourceEnergy (keV)> <sourceType> <LogLevel> " << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	if (LogLevel != 0 && LogLevel != 1 && LogLevel != 2 && LogLevel != 3) {
+		cerr << "-- ERROR -- LogLevel must be 0(ERROR), 1(WARNING) 2(INFO) or 3(DEBUG) !" << endl;
 		exit(EXIT_FAILURE);
 	}
 
@@ -55,32 +66,30 @@ int main(int argc, char *argv[])
 	detectorParameters dParam;
 	sourceParameters sParam;
 
-// en cm
+	// if you want to ignore the collimator set a negative value for cParam.position[0]
+	cParam.position[0]=-1;		// en cm
+	cParam.position[1]=0;		// en cm
+	cParam.diameter=2.5;		// en cm
 
-	cParam.position[0]=-1.5;
-	cParam.position[1]=0;
-	cParam.diameter=2.5;
 
-	dParam.position[0]=4;
-	dParam.position[1]=0;
-	dParam.diameter=7.6;
-	dParam.width=7.6;
+	dParam.position[0]=4;		// en cm
+	dParam.position[1]=0;		// en cm
+	dParam.diameter=7.6;		// en cm
+	dParam.width=7.6;			// en cm
 	
-	sParam.position[0]=0;
-	sParam.position[1]=0;
+	sParam.position[0]=0;		// en cm
+	sParam.position[1]=0;		// en cm
 	sParam.energy=sourceEnergy;
-	sParam.sourceType=0;
+	sParam.sourceType=sourceType;
 
 	if(LogLevel>1) cerr << "-- INFO -- New experiment" << endl;		
-	Experiment* experiment = new Experiment(sParam, cParam, dParam); //energie 49,5 keV pour le thorium
-
+	Experiment* experiment = new Experiment(sParam, cParam, dParam);
+	
 	if(LogLevel>1) cerr << "-- INFO -- Starting for " << nEvents << " events" << endl;		
 	for (i=0; i<nEvents; i++){
 		scintillationEnergy[i]= experiment->event(sParam.sourceType);
 	}
 	
-
-
 	if(LogLevel>1) cerr << "-- INFO -- Making the output files" << endl;
 
 	if (sParam.sourceType == 22)
